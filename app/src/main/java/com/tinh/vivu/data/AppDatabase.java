@@ -14,7 +14,7 @@ import com.tinh.vivu.models.Trip;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Trip.class, RouteStop.class}, version = 1)
+@Database(entities = {Trip.class, RouteStop.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
@@ -31,37 +31,37 @@ public abstract class AppDatabase extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "vivu_database")
                     .fallbackToDestructiveMigration()
-                    .addCallback(roomCallback) // Gọi hàm Callback để tạo dữ liệu mẫu
+                    .addCallback(roomCallback)
                     .build();
         }
         return instance;
     }
 
-    // Lắng nghe sự kiện lần đầu tiên tạo Database
     private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
 
-            // Chạy ngầm để nạp dữ liệu Demo
             databaseWriteExecutor.execute(() -> {
                 TripDao tripDao = instance.tripDao();
                 RouteStopDao routeStopDao = instance.routeStopDao();
 
-                // 1. NẠP 3 CHUYẾN ĐI DEMO
-                Trip trip1 = new Trip("Khám phá Tây Bắc", "01/12/2024", "10/12/2024", 5000000, "Upcoming");
-                Trip trip2 = new Trip("Phượt Đà Lạt", "15/01/2025", "20/01/2025", 3000000, "Planning");
-                Trip trip3 = new Trip("Vòng quanh Miền Tây", "05/04/2025", "15/04/2025", 7000000, "Completed");
+                // 1. NẠP CHUYẾN ĐI MẪU
+                Trip trip1 = new Trip("Khám phá Tây Bắc", "01/12/2024", "10/12/2024", 5000000, "Planning");
+                Trip trip2 = new Trip("Hà Nội - Đà Nẵng", "11/11/2025", "21/06/2026", 15000000, "Ongoing");
 
                 tripDao.insert(trip1);
                 tripDao.insert(trip2);
-                tripDao.insert(trip3);
 
-                // 2. NẠP 3 CHẶNG DỪNG DEMO CHO CHUYẾN ĐI SỐ 1 (Tây Bắc) - DÙNG SỐ DOUBLE
-                // tripId = 1
-                routeStopDao.insert(new RouteStop(1, "Hà Nội", 1, 0.0));
-                routeStopDao.insert(new RouteStop(1, "Hòa Bình", 2, 70.5));
-                routeStopDao.insert(new RouteStop(1, "Mộc Châu", 3, 200.0));
+                // 2. NẠP CHẶNG DỪNG MẪU CHO CHUYẾN ĐI 1 (Tây Bắc)
+                // Phải dùng String cho thời gian theo đúng Constructor mới:
+                // new RouteStop(tripId, name, orderIndex, expectedArrival, expectedDeparture)
+                routeStopDao.insert(new RouteStop(1, "Hà Nội", 1, "06:00 01/12", "07:00 01/12"));
+                routeStopDao.insert(new RouteStop(1, "Hòa Bình", 2, "10:00 01/12", "11:30 01/12"));
+                routeStopDao.insert(new RouteStop(1, "Mộc Châu", 3, "16:00 01/12", "08:00 02/12"));
+
+                // Demo thêm cho chuyến đi 2
+                routeStopDao.insert(new RouteStop(2, "Nghệ An", 1, "12:00 11/11", "13:00 11/11"));
             });
         }
     };

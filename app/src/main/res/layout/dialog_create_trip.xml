@@ -17,6 +17,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/tv_dialog_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -78,6 +79,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_input_field"
                     android:drawableEnd="@drawable/ic_calendar"
+                    android:focusable="false"
                     android:hint="dd/mm/yyyy"
                     android:paddingHorizontal="12dp" />
             </LinearLayout>
@@ -103,6 +105,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_input_field"
                     android:drawableEnd="@drawable/ic_calendar"
+                    android:focusable="false"
                     android:hint="dd/mm/yyyy"
                     android:paddingHorizontal="12dp" />
             </LinearLayout>
@@ -138,7 +141,7 @@
                 android:layout_height="56dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:text="Tạo &amp; Xây Dựng Lộ Trình"
+                android:text="Tạo mới"
                 android:textAllCaps="false"
                 app:backgroundTint="@color/teal_primary"
                 app:cornerRadius="8dp" />
@@ -156,6 +159,5 @@
                 app:cornerRadius="8dp"
                 app:strokeColor="#E0E0E0" />
         </LinearLayout>
-
     </LinearLayout>
 </androidx.cardview.widget.CardView>

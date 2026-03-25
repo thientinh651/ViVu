@@ -23,7 +23,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
 
     public interface OnTripClickListener {
         void onDeleteClick(Trip trip);
-        void onTripClick(Trip trip); // Dùng để bấm vào chuyển trang chi tiết
+        void onEditClick(Trip trip); // THÊM SỰ KIỆN SỬA
+        void onTripClick(Trip trip);
     }
 
     public void setOnTripClickListener(OnTripClickListener listener) {
@@ -45,24 +46,27 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
         holder.tvTripName.setText(currentTrip.getName());
         holder.tvTripStatus.setText(currentTrip.getStatus());
 
-        // Nối chuỗi ngày tháng
         String dateString = currentTrip.getStartDate();
         if (currentTrip.getEndDate() != null && !currentTrip.getEndDate().isEmpty()) {
             dateString += " - " + currentTrip.getEndDate();
         }
         holder.tvTripDate.setText(dateString);
 
-        // Định dạng tiền tệ (thêm dấu phẩy)
         DecimalFormat formatter = new DecimalFormat("#,###");
         String formattedBudget = formatter.format(currentTrip.getTotalBudget());
         holder.tvTripBudget.setText(formattedBudget + " VNĐ");
 
-        // Sự kiện Xóa
+        // Bấm Xóa
         holder.btnDeleteTrip.setOnClickListener(v -> {
             if (listener != null) listener.onDeleteClick(currentTrip);
         });
 
-        // Sự kiện bấm vào cả cái Card để xem chi tiết (Hình 3)
+        // Bấm Sửa (Bút chì)
+        holder.btnEditTrip.setOnClickListener(v -> {
+            if (listener != null) listener.onEditClick(currentTrip);
+        });
+
+        // Bấm vào xem chi tiết
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onTripClick(currentTrip);
         });
@@ -80,7 +84,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
 
     static class TripHolder extends RecyclerView.ViewHolder {
         private TextView tvTripName, tvTripStatus, tvTripDate, tvTripBudget;
-        private ImageView btnDeleteTrip;
+        private ImageView btnDeleteTrip, btnEditTrip; // THÊM KHAI BÁO NÚT SỬA
 
         public TripHolder(@NonNull View itemView) {
             super(itemView);
@@ -89,6 +93,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
             tvTripDate = itemView.findViewById(R.id.tv_trip_date);
             tvTripBudget = itemView.findViewById(R.id.tv_trip_budget);
             btnDeleteTrip = itemView.findViewById(R.id.btn_delete_trip);
+            btnEditTrip = itemView.findViewById(R.id.btn_edit_trip); // ÁNH XẠ
         }
     }
 }

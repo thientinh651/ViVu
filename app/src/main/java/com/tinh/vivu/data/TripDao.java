@@ -15,7 +15,10 @@ public interface TripDao {
     @Insert
     void insert(Trip trip);
 
-    // THÊM LỆNH XÓA Ở ĐÂY
+    // BẠN THÊM ĐOẠN NÀY VÀO ĐỂ APP BIẾT CÁCH CẬP NHẬT TRẠNG THÁI
+    @androidx.room.Update
+    void update(Trip trip);
+
     @Delete
     void delete(Trip trip);
 

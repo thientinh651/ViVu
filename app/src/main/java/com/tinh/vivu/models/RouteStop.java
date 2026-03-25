@@ -1,27 +1,73 @@
-package com.tinh.vivu.data;
+package com.tinh.vivu.models;
 
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-import com.tinh.vivu.models.RouteStop;
+@Entity(tableName = "route_stops")
+public class RouteStop {
 
-import java.util.List;
+    @PrimaryKey(autoGenerate = true)
+    private int id; // point_id
 
-@Dao
-public interface RouteStopDao {
+    private int tripId; // trip_id
 
-    @Insert
-    void insert(RouteStop routeStop);
+    private String locationName; // location_name
 
-    @Delete
-    void delete(RouteStop routeStop);
+    // Đã đổi từ orderNumber thành orderIndex
+    private int orderIndex; // order_index
 
-    @Query("SELECT * FROM route_stops ORDER BY orderNumber ASC")
-    List<RouteStop> getAllStops();
+    // === THÊM CÁC THUỘC TÍNH MỚI THEO YÊU CẦU ===
 
-    // THÊM HÀM NÀY: Chỉ lấy điểm dừng của 1 chuyến đi cụ thể
-    @Query("SELECT * FROM route_stops WHERE tripId = :tripId ORDER BY orderNumber ASC")
-    List<RouteStop> getStopsByTripId(int tripId);
+    // Thời gian dự kiến (Lưu dưới dạng chuỗi String, VD: "01:01 11-01")
+    private String expectedArrival;
+    private String expectedDeparture;
+
+    // Thời gian thực tế
+    private String actualArrival;
+    private String actualDeparture;
+
+    // Trạng thái: Đã đến nơi chưa?
+    private boolean isArrived;
+
+    // Constructor để tạo mới một điểm dừng
+    public RouteStop(int tripId, String locationName, int orderIndex, String expectedArrival, String expectedDeparture) {
+        this.tripId = tripId;
+        this.locationName = locationName;
+        this.orderIndex = orderIndex;
+        this.expectedArrival = expectedArrival;
+        this.expectedDeparture = expectedDeparture;
+
+        // Mặc định khi mới lên kế hoạch thì thực tế là rỗng và chưa đến nơi
+        this.actualArrival = "";
+        this.actualDeparture = "";
+        this.isArrived = false;
+    }
+
+    // --- Getters và Setters ---
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getTripId() { return tripId; }
+    public void setTripId(int tripId) { this.tripId = tripId; }
+
+    public String getLocationName() { return locationName; }
+    public void setLocationName(String locationName) { this.locationName = locationName; }
+
+    public int getOrderIndex() { return orderIndex; }
+    public void setOrderIndex(int orderIndex) { this.orderIndex = orderIndex; }
+
+    public String getExpectedArrival() { return expectedArrival; }
+    public void setExpectedArrival(String expectedArrival) { this.expectedArrival = expectedArrival; }
+
+    public String getExpectedDeparture() { return expectedDeparture; }
+    public void setExpectedDeparture(String expectedDeparture) { this.expectedDeparture = expectedDeparture; }
+
+    public String getActualArrival() { return actualArrival; }
+    public void setActualArrival(String actualArrival) { this.actualArrival = actualArrival; }
+
+    public String getActualDeparture() { return actualDeparture; }
+    public void setActualDeparture(String actualDeparture) { this.actualDeparture = actualDeparture; }
+
+    public boolean isArrived() { return isArrived; }
+    public void setArrived(boolean arrived) { isArrived = arrived; }
 }
