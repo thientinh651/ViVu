@@ -2,10 +2,10 @@ package com.tinh.vivu;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.tinh.vivu.data.AppDatabase;
 import com.tinh.vivu.models.Trip;
@@ -27,13 +28,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rvTrips;
     private ImageView btnAddTrip;
+    private BottomNavigationView bottomNavigationView;
     private AppDatabase database;
     private ExecutorService executorService;
     private List<Trip> tripList;
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         rvTrips = findViewById(R.id.rv_trips);
         btnAddTrip = findViewById(R.id.btn_add_trip);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         database = AppDatabase.getInstance(this);
         executorService = Executors.newSingleThreadExecutor();
@@ -68,29 +69,43 @@ public class MainActivity extends AppCompatActivity {
                                 loadTrips();
                             });
                         })
-                        .setNegativeButton("Không", (dialog, which) -> {
-                            dialog.dismiss();
-                        })
+                        .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
                         .show();
             }
 
-
             @Override
             public void onEditClick(Trip trip) {
-                // Sử dụng hàm setup chung để Sửa
                 showTripDialog(trip);
             }
 
             @Override
             public void onTripClick(Trip trip) {
-                android.content.Intent intent = new android.content.Intent(MainActivity.this, TripDetailActivity.class);
+                Intent intent = new Intent(MainActivity.this, TripDetailActivity.class);
                 intent.putExtra("TRIP_ID", trip.getId());
                 startActivity(intent);
             }
         });
 
-        // Bấm dấu cộng để Tạo mới
         btnAddTrip.setOnClickListener(v -> showTripDialog(null));
+
+        // --- Thêm logic Xử lý sự kiện click cho Bottom Navigation ---
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.nav_home); // Đặt Home là menu mặc định
+            bottomNavigationView.setOnItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.nav_home) {
+                    return true;
+                } else if (itemId == R.id.nav_checklist) {
+                    // Chuyển sang màn hình CheckList
+                    Intent intent = new Intent(MainActivity.this, activity_check_list.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0); // Bỏ hiệu ứng để cảm giác chuyển mượt như chuyển tab
+                    return true;
+                }
+                // Các menu khác (Expense, Music, More) bạn có thể thêm sau
+                return false;
+            });
+        }
     }
 
     @Override
@@ -103,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         executorService.execute(() -> {
             List<Trip> dbTrips = database.tripDao().getAllTrips();
 
-            // Đợi dữ liệu mẫu nạp vào nếu lần đầu mở app
+            // Đợi nạp dữ liệu mẫu nếu DB trống
             if (dbTrips.isEmpty()) {
                 try {
                     Thread.sleep(1000);
@@ -122,10 +137,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * HÀM CHUNG ĐỂ XỬ LÝ CẢ TẠO MỚI VÀ CHỈNH SỬA
-     * @param tripToEdit Nếu là null -> Tạo mới. Nếu có giá trị -> Chỉnh sửa.
-     */
+    // Hàm hiển thị Dialog dùng chung cho Tạo và Sửa
     private void showTripDialog(Trip tripToEdit) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -136,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
-        // Ánh xạ View trong Dialog
         TextView tvTitle = dialog.findViewById(R.id.tv_dialog_title);
         EditText etName = dialog.findViewById(R.id.et_trip_name);
         EditText etStart = dialog.findViewById(R.id.et_start_date);
@@ -146,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialButton btnCancel = dialog.findViewById(R.id.btn_cancel);
         ImageView btnClose = dialog.findViewById(R.id.btn_close);
 
-        // Đổ dữ liệu nếu là chế độ Sửa
+        // Chế độ chỉnh sửa
         if (tripToEdit != null) {
             if (tvTitle != null) tvTitle.setText("Chỉnh Sửa Chuyến Đi");
             btnAction.setText("Cập nhật");
@@ -156,59 +167,74 @@ public class MainActivity extends AppCompatActivity {
             etBudget.setText(tripToEdit.getTotalBudget() == 0 ? "" : String.valueOf((long)tripToEdit.getTotalBudget()));
         }
 
-        // Đóng dialog
         btnClose.setOnClickListener(v -> dialog.dismiss());
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
-        // Chọn ngày (Sử dụng DatePickerDialog)
         etStart.setOnClickListener(v -> showDatePicker(etStart));
         etEnd.setOnClickListener(v -> showDatePicker(etEnd));
 
-        // Xử lý khi bấm nút Xác nhận (Tạo/Cập nhật)
         btnAction.setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
             String start = etStart.getText().toString().trim();
             String end = etEnd.getText().toString().trim();
             String budgetStr = etBudget.getText().toString().trim();
 
-            // SỬ DỤNG VALIDATION UTILS ĐÃ TẠO
+            // 1. Kiểm tra Tên chuyến đi
             if (ValidationUtils.isNullOrEmpty(name)) {
                 Toast.makeText(this, "Vui lòng nhập tên chuyến đi!", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            // 2. Kiểm tra Ngày bắt đầu
             if (ValidationUtils.isNullOrEmpty(start)) {
                 Toast.makeText(this, "Vui lòng chọn ngày bắt đầu!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Kiểm tra ngày: Start phải trước hoặc bằng End (nếu có nhập End)
+            // Quy tắc: Ngày bắt đầu không được nhỏ hơn ngày hiện tại
+            if (!ValidationUtils.isAfterOrEqualCurrentDate(start, "dd/MM/yyyy")) {
+                Toast.makeText(this, "Ngày bắt đầu không được chọn ngày quá khứ!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // 3. Kiểm tra Ngày kết thúc (Nếu có nhập)
             if (!ValidationUtils.isNullOrEmpty(end)) {
+                // Quy tắc: End Date >= Start Date
                 if (!ValidationUtils.isStartBeforeOrEqualEnd(start, end, "dd/MM/yyyy")) {
-                    Toast.makeText(this, "Ngày kết thúc không được trước ngày bắt đầu!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Ngày kết thúc phải sau hoặc trùng ngày bắt đầu!", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
 
-            double budget = ValidationUtils.isNumeric(budgetStr) ? Double.parseDouble(budgetStr) : 0;
+            // 4. Kiểm tra Ngân sách và xử lý biến để dùng trong lambda
+            double tempBudget = 0;
+            if (!ValidationUtils.isNullOrEmpty(budgetStr)) {
+                if (ValidationUtils.isNumeric(budgetStr)) {
+                    tempBudget = Double.parseDouble(budgetStr);
+                } else {
+                    Toast.makeText(this, "Ngân sách phải là một con số!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+            final double finalBudget = tempBudget; // Biến này sẽ không bị thay đổi nữa (effectively final)
 
+            // Lưu dữ liệu
             executorService.execute(() -> {
                 if (tripToEdit == null) {
-                    // Chế độ tạo mới
-                    Trip newTrip = new Trip(name, start, end, budget, "Lên kế hoạch");
+                    Trip newTrip = new Trip(name, start, end, finalBudget, "Lên kế hoạch");
                     database.tripDao().insert(newTrip);
                 } else {
-                    // Chế độ chỉnh sửa
                     tripToEdit.setName(name);
                     tripToEdit.setStartDate(start);
                     tripToEdit.setEndDate(end);
-                    tripToEdit.setTotalBudget(budget);
+                    tripToEdit.setTotalBudget(finalBudget);
                     database.tripDao().update(tripToEdit);
                 }
 
                 loadTrips();
                 runOnUiThread(() -> {
                     dialog.dismiss();
-                    Toast.makeText(this, tripToEdit == null ? "Tạo thành công!" : "Đã cập nhật!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, tripToEdit == null ? "Tạo chuyến đi thành công!" : "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
                 });
             });
         });

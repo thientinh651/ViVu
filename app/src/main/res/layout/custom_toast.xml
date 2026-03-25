@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--layout/custom_toast.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/custom_toast_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_custom_toast"
+    android:elevation="4dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <!-- Icon của Toast (Bạn có thể đổi icon bất kỳ khi gọi code) -->
+    <ImageView
+        android:id="@+id/toast_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_map_trifold"
+        app:tint="#FF5722" />
+
+    <!-- Dòng chữ thông báo -->
+    <TextView
+        android:id="@+id/toast_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Thông báo của bạn ở đây"
+        android:textColor="#37474F"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+</LinearLayout>

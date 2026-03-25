@@ -8,19 +8,26 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.tinh.vivu.models.ChecklistCategory;
+import com.tinh.vivu.models.ChecklistTask;
 import com.tinh.vivu.models.RouteStop;
 import com.tinh.vivu.models.Trip;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Trip.class, RouteStop.class}, version = 3)
+// 1. Khai báo thêm ChecklistCategory và ChecklistTask vào mảng entities
+// 2. Tăng version lên 4 để Room cập nhật lại CSDL
+@Database(entities = {Trip.class, RouteStop.class, ChecklistCategory.class, ChecklistTask.class}, version = 4, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
 
     public abstract TripDao tripDao();
     public abstract RouteStopDao routeStopDao();
+
+    // 3. Thêm ChecklistDao để tương tác với bảng checklist
+    public abstract ChecklistDao checklistDao();
 
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =
@@ -30,7 +37,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "vivu_database")
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration() // Nếu đổi version, data cũ (Trip/Stop) sẽ bị xoá và nạp lại từ roomCallback
                     .addCallback(roomCallback)
                     .build();
         }
@@ -54,8 +61,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 tripDao.insert(trip2);
 
                 // 2. NẠP CHẶNG DỪNG MẪU CHO CHUYẾN ĐI 1 (Tây Bắc)
-                // Phải dùng String cho thời gian theo đúng Constructor mới:
-                // new RouteStop(tripId, name, orderIndex, expectedArrival, expectedDeparture)
                 routeStopDao.insert(new RouteStop(1, "Hà Nội", 1, "06:00 01/12", "07:00 01/12"));
                 routeStopDao.insert(new RouteStop(1, "Hòa Bình", 2, "10:00 01/12", "11:30 01/12"));
                 routeStopDao.insert(new RouteStop(1, "Mộc Châu", 3, "16:00 01/12", "08:00 02/12"));

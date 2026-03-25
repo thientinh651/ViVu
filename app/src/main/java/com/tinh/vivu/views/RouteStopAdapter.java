@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +27,7 @@ public class RouteStopAdapter extends RecyclerView.Adapter<RouteStopAdapter.Stop
 
     public interface OnStopClickListener {
         void onDeleteClick(RouteStop stop);
-        void onUpdateClick(RouteStop stop); // Thêm hàm cập nhật
+        void onUpdateClick(RouteStop stop);
     }
 
     public void setOnStopClickListener(OnStopClickListener listener) {
@@ -49,11 +50,10 @@ public class RouteStopAdapter extends RecyclerView.Adapter<RouteStopAdapter.Stop
         holder.tvExpArr.setText(stop.getExpectedArrival());
         holder.tvExpDep.setText(stop.getExpectedDeparture());
 
-        // Hiển thị dữ liệu thực tế hiện có
         holder.tvActArr.setText(stop.getActualArrival().isEmpty() ? "--:-- --/--" : stop.getActualArrival());
         holder.tvActDep.setText(stop.getActualDeparture().isEmpty() ? "--:-- --/--" : stop.getActualDeparture());
 
-        // Cập nhật trạng thái CheckBox (chặn sự kiện gán tự động)
+        // Reset listener để tránh bị gọi đè khi scroll
         holder.cbArrived.setOnCheckedChangeListener(null);
         holder.cbDeparted.setOnCheckedChangeListener(null);
 
@@ -63,32 +63,45 @@ public class RouteStopAdapter extends RecyclerView.Adapter<RouteStopAdapter.Stop
         // Xử lý tick "Đã đến"
         holder.cbArrived.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                String currentTime = new SimpleDateFormat("HH:mm dd/MM", Locale.getDefault()).format(new Date());
+                String currentTime = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault()).format(new Date());
                 stop.setActualArrival(currentTime);
                 stop.setArrived(true);
             } else {
+                // Nếu hủy "Đã đến" thì cũng phải hủy luôn "Đã rời đi" vì logic không cho phép rời mà chưa đến
                 stop.setActualArrival("");
+                stop.setActualDeparture("");
                 stop.setArrived(false);
+                holder.cbDeparted.setChecked(false);
             }
-            if (listener != null) listener.onUpdateClick(stop);
+            updateStop(stop);
             notifyItemChanged(position);
         });
 
-        // Xử lý tick "Đã rời đi"
+        // Xử lý tick "Đã rời đi" - RÀNG BUỘC: PHẢI ĐẾN MỚI ĐƯỢC RỜI
         holder.cbDeparted.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                String currentTime = new SimpleDateFormat("HH:mm dd/MM", Locale.getDefault()).format(new Date());
+                if (stop.getActualArrival().isEmpty()) {
+                    // Nếu chưa check Đã đến mà đòi check Đã rời
+                    Toast.makeText(buttonView.getContext(), "Bạn phải Check-in 'Đã đến' trước!", Toast.LENGTH_SHORT).show();
+                    buttonView.setChecked(false);
+                    return;
+                }
+                String currentTime = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault()).format(new Date());
                 stop.setActualDeparture(currentTime);
             } else {
                 stop.setActualDeparture("");
             }
-            if (listener != null) listener.onUpdateClick(stop);
+            updateStop(stop);
             notifyItemChanged(position);
         });
 
         holder.btnDelete.setOnClickListener(v -> {
             if (listener != null) listener.onDeleteClick(stop);
         });
+    }
+
+    private void updateStop(RouteStop stop) {
+        if (listener != null) listener.onUpdateClick(stop);
     }
 
     @Override

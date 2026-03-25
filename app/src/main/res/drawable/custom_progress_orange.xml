@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tên file: app/src/main/res/drawable/custom_progress_orange.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Lớp 1: Nền của thanh tiến trình (Phần chưa hoàn thành - Màu xám nhạt) -->
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <!-- Bo góc cho nền -->
+            <corners android:radius="8dp" />
+            <!-- Màu xám nhạt -->
+            <solid android:color="#E9ECEF" />
+        </shape>
+    </item>
+
+    <!-- Lớp 2: Phần tiến trình đã chạy (Phần đã hoàn thành - Màu cam) -->
+    <item android:id="@android:id/progress">
+        <!-- Thẻ clip giúp thanh màu cam chạy dài ra từ trái sang phải theo % -->
+        <clip>
+            <shape android:shape="rectangle">
+                <!-- Bo góc cho phần màu cam -->
+                <corners android:radius="8dp" />
+                <!-- Màu cam chủ đạo -->
+                <solid android:color="#FF5722" />
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>
