@@ -129,16 +129,27 @@ public class activity_check_list extends AppCompatActivity implements ChecklistT
             bottomNavigationView.setSelectedItemId(R.id.nav_checklist);
             bottomNavigationView.setOnItemSelectedListener(item -> {
                 int itemId = item.getItemId();
+
                 if (itemId == R.id.nav_checklist) {
                     return true;
                 } else if (itemId == R.id.nav_home) {
+                    // Chuyển sang Trang chủ (Home)
                     Intent intent = new Intent(activity_check_list.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                    finish(); // Kết thúc màn hình hiện tại để đỡ nặng máy
+                    return true;
+                } else if (itemId == R.id.nav_expense) {
+                    // Chuyển sang màn hình Chi tiêu (Expense)
+                    Intent intent = new Intent(activity_check_list.this, Expense.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                     finish();
                     return true;
                 }
+
                 return false;
             });
         }

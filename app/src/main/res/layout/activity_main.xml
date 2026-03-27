@@ -86,6 +86,7 @@
         app:itemRippleColor="@color/teal_light"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:itemTextAppearanceActive="@style/BottomNavActiveText"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

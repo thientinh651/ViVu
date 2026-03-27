@@ -10,24 +10,31 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.tinh.vivu.models.ChecklistCategory;
 import com.tinh.vivu.models.ChecklistTask;
+import com.tinh.vivu.models.Expense;
+import com.tinh.vivu.models.ExpenseCategory;
 import com.tinh.vivu.models.RouteStop;
 import com.tinh.vivu.models.Trip;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-// 1. Khai báo thêm ChecklistCategory và ChecklistTask vào mảng entities
-// 2. Tăng version lên 4 để Room cập nhật lại CSDL
-@Database(entities = {Trip.class, RouteStop.class, ChecklistCategory.class, ChecklistTask.class}, version = 4, exportSchema = false)
+// Cập nhật mảng entities thêm Expense, ExpenseCategory. Tăng version lên 5
+@Database(entities = {
+        Trip.class, RouteStop.class,
+        ChecklistCategory.class, ChecklistTask.class,
+        ExpenseCategory.class, Expense.class
+}, version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
 
     public abstract TripDao tripDao();
     public abstract RouteStopDao routeStopDao();
-
-    // 3. Thêm ChecklistDao để tương tác với bảng checklist
     public abstract ChecklistDao checklistDao();
+
+    // Thêm DAO cho Quản lý chi tiêu
+    public abstract ExpenseCategoryDao expenseCategoryDao();
+    public abstract ExpenseDao expenseDao();
 
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =
@@ -37,7 +44,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "vivu_database")
-                    .fallbackToDestructiveMigration() // Nếu đổi version, data cũ (Trip/Stop) sẽ bị xoá và nạp lại từ roomCallback
+                    .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build();
         }
@@ -52,21 +59,25 @@ public abstract class AppDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 TripDao tripDao = instance.tripDao();
                 RouteStopDao routeStopDao = instance.routeStopDao();
+                ExpenseCategoryDao expenseCategoryDao = instance.expenseCategoryDao();
 
                 // 1. NẠP CHUYẾN ĐI MẪU
                 Trip trip1 = new Trip("Khám phá Tây Bắc", "01/12/2024", "10/12/2024", 5000000, "Planning");
                 Trip trip2 = new Trip("Hà Nội - Đà Nẵng", "11/11/2025", "21/06/2026", 15000000, "Ongoing");
-
                 tripDao.insert(trip1);
                 tripDao.insert(trip2);
 
-                // 2. NẠP CHẶNG DỪNG MẪU CHO CHUYẾN ĐI 1 (Tây Bắc)
+                // 2. NẠP CHẶNG DỪNG MẪU
                 routeStopDao.insert(new RouteStop(1, "Hà Nội", 1, "06:00 01/12", "07:00 01/12"));
                 routeStopDao.insert(new RouteStop(1, "Hòa Bình", 2, "10:00 01/12", "11:30 01/12"));
-                routeStopDao.insert(new RouteStop(1, "Mộc Châu", 3, "16:00 01/12", "08:00 02/12"));
 
-                // Demo thêm cho chuyến đi 2
-                routeStopDao.insert(new RouteStop(2, "Nghệ An", 1, "12:00 11/11", "13:00 11/11"));
+                // 3. NẠP CÁC DANH MỤC CHI TIÊU MẶC ĐỊNH
+                expenseCategoryDao.insert(new ExpenseCategory("Xăng xe & Di chuyển"));
+                expenseCategoryDao.insert(new ExpenseCategory("Ăn uống"));
+                expenseCategoryDao.insert(new ExpenseCategory("Lưu trú (Khách sạn/Homestay)"));
+                expenseCategoryDao.insert(new ExpenseCategory("Vé tham quan"));
+                expenseCategoryDao.insert(new ExpenseCategory("Mua sắm & Quà cáp"));
+                expenseCategoryDao.insert(new ExpenseCategory("Chi phí khác"));
             });
         }
     };

@@ -15,11 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Vivu">
         <activity
-            android:name=".activity_check_list"
+            android:name=".Expense"
             android:exported="false" />
-        <!--        <activity-->
-        <!--            android:name=".CheckList"-->
-        <!--            android:exported="false" />-->
+        <activity
+            android:name=".activity_check_list"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".CheckList" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".TripDetailActivity"
             android:exported="false" />

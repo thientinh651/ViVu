@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.Vivu" parent="Base.Theme.Vivu" />
+    <style name="BottomNavActiveText">
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

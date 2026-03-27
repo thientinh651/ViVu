@@ -89,6 +89,23 @@ public class MainActivity extends AppCompatActivity {
         btnAddTrip.setOnClickListener(v -> showTripDialog(null));
 
         // --- Thêm logic Xử lý sự kiện click cho Bottom Navigation ---
+//        if (bottomNavigationView != null) {
+//            bottomNavigationView.setSelectedItemId(R.id.nav_home); // Đặt Home là menu mặc định
+//            bottomNavigationView.setOnItemSelectedListener(item -> {
+//                int itemId = item.getItemId();
+//                if (itemId == R.id.nav_home) {
+//                    return true;
+//                } else if (itemId == R.id.nav_checklist) {
+//                    // Chuyển sang màn hình CheckList
+//                    Intent intent = new Intent(MainActivity.this, activity_check_list.class);
+//                    startActivity(intent);
+//                    overridePendingTransition(0, 0); // Bỏ hiệu ứng để cảm giác chuyển mượt như chuyển tab
+//                    return true;
+//                }
+//                // Các menu khác (Expense, Music, More) bạn có thể thêm sau
+//                return false;
+//            });
+//        }
         if (bottomNavigationView != null) {
             bottomNavigationView.setSelectedItemId(R.id.nav_home); // Đặt Home là menu mặc định
             bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -99,10 +116,15 @@ public class MainActivity extends AppCompatActivity {
                     // Chuyển sang màn hình CheckList
                     Intent intent = new Intent(MainActivity.this, activity_check_list.class);
                     startActivity(intent);
-                    overridePendingTransition(0, 0); // Bỏ hiệu ứng để cảm giác chuyển mượt như chuyển tab
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (itemId == R.id.nav_expense) {
+                    // Chuyển sang màn hình Expense (Quản lý chi tiêu)
+                    Intent intent = new Intent(MainActivity.this, Expense.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
                     return true;
                 }
-                // Các menu khác (Expense, Music, More) bạn có thể thêm sau
                 return false;
             });
         }
