@@ -24,6 +24,7 @@ public class ChecklistTaskAdapter extends RecyclerView.Adapter<ChecklistTaskAdap
     public interface OnTaskActionListener {
         void onTaskStatusChanged(ChecklistTask task, boolean isChecked);
         void onTaskDeleted(ChecklistTask task);
+        void onTaskEdit(ChecklistTask task); // Thêm sự kiện Edit
     }
 
     public ChecklistTaskAdapter(List<ChecklistTask> tasks, OnTaskActionListener listener) {
@@ -69,6 +70,17 @@ public class ChecklistTaskAdapter extends RecyclerView.Adapter<ChecklistTaskAdap
                 listener.onTaskDeleted(task);
             }
         });
+
+        // Bắt sự kiện Nhấn đúp (Double-Click) vào cả dòng để Sửa
+        holder.itemView.setOnClickListener(v -> {
+            long clickTime = System.currentTimeMillis();
+            if (clickTime - holder.lastClickTime < 300) { // 300ms khoảng cách giữa 2 lần bấm
+                if (listener != null) {
+                    listener.onTaskEdit(task);
+                }
+            }
+            holder.lastClickTime = clickTime;
+        });
     }
 
     @Override
@@ -80,6 +92,7 @@ public class ChecklistTaskAdapter extends RecyclerView.Adapter<ChecklistTaskAdap
         CheckBox cbStatus;
         TextView tvName;
         ImageView btnDelete;
+        long lastClickTime = 0; // Biến lưu thời gian click để tính double-click
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);

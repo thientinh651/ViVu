@@ -12,18 +12,22 @@ import com.tinh.vivu.models.ChecklistCategory;
 import com.tinh.vivu.models.ChecklistTask;
 import com.tinh.vivu.models.Expense;
 import com.tinh.vivu.models.ExpenseCategory;
+import com.tinh.vivu.models.PlayList;
+import com.tinh.vivu.models.PlayListSong;
 import com.tinh.vivu.models.RouteStop;
+import com.tinh.vivu.models.Song;
 import com.tinh.vivu.models.Trip;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-// Cập nhật mảng entities thêm Expense, ExpenseCategory. Tăng version lên 5
+// Cập nhật mảng entities thêm Song, PlayList, PlayListSong. Tăng version lên 6
 @Database(entities = {
         Trip.class, RouteStop.class,
         ChecklistCategory.class, ChecklistTask.class,
-        ExpenseCategory.class, Expense.class
-}, version = 5, exportSchema = false)
+        ExpenseCategory.class, Expense.class,
+        Song.class, PlayList.class, PlayListSong.class
+}, version = 7, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
@@ -35,6 +39,11 @@ public abstract class AppDatabase extends RoomDatabase {
     // Thêm DAO cho Quản lý chi tiêu
     public abstract ExpenseCategoryDao expenseCategoryDao();
     public abstract ExpenseDao expenseDao();
+
+    // Thêm DAO cho tính năng Nghe nhạc
+    public abstract SongDao songDao();
+    public abstract PlayListDao playListDao();
+    public abstract PlayListSongDao playListSongDao();
 
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =

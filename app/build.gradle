@@ -38,12 +38,15 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
-    // Room Database - Cực kỳ quan trọng cho app Offline
+
     def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
-    // ViewModel và LiveData - Để làm MVVM mượt mà
+
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.7.0"
     implementation "androidx.lifecycle:lifecycle-livedata:2.7.0"
+    
+    // Media dependency for MediaSessionCompat and MediaStyle
+    implementation 'androidx.media:media:1.7.0'
 }

@@ -3,90 +3,122 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F6F8"
-    android:fitsSystemWindows="true">
+    android:background="#F5F6F8">
 
-    <!-- Header -->
-    <LinearLayout
-        android:id="@+id/header_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/teal_primary"
-        android:orientation="horizontal"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="16dp"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_map_trifold"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Quản Lý Chuyến Đi"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Lập kế hoạch chi tiết"
-                android:textColor="#E0F2F1"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- Nút Thêm (+) ĐÃ ĐƯỢC THÊM BACKGROUND TRẮNG -->
-        <ImageView
-            android:id="@+id/btn_add_trip"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_circle_white"
-            android:padding="12dp"
-            android:src="@drawable/ic_plus"
-            app:tint="@color/teal_primary" />
-    </LinearLayout>
-
-    <!-- Danh sách chuyến đi -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_trips"
+    <!-- Đây là khoảng trống (Cái Vỏ) để nạp các Fragment vào -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:padding="16dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintTop_toBottomOf="@id/header_layout" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation" />
 
-    <!-- Thanh Menu Dưới -->
+    <!-- Thanh Menu Dưới (Chỉ xuất hiện duy nhất ở đây) -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         app:itemActiveIndicatorStyle="@null"
         app:itemIconSize="24dp"
         app:itemRippleColor="@color/teal_light"
+        app:itemTextAppearanceActive="@style/BottomNavActiveText"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemTextAppearanceActive="@style/BottomNavActiveText"/>
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="#F5F6F8"-->
+<!--    android:fitsSystemWindows="true">-->
+
+<!--    &lt;!&ndash; Header &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/header_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/teal_primary"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingHorizontal="20dp"-->
+<!--        android:paddingVertical="16dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:src="@drawable/ic_map_trifold"-->
+<!--                    app:tint="@color/white" />-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:text="Quản Lý Chuyến Đi"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="20sp"-->
+<!--                    android:textStyle="bold" />-->
+<!--            </LinearLayout>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:text="Lập kế hoạch chi tiết"-->
+<!--                android:textColor="#E0F2F1"-->
+<!--                android:textSize="14sp" />-->
+<!--        </LinearLayout>-->
+
+<!--        &lt;!&ndash; Nút Thêm (+) ĐÃ ĐƯỢC THÊM BACKGROUND TRẮNG &ndash;&gt;-->
+<!--        <ImageView-->
+<!--            android:id="@+id/btn_add_trip"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:background="@drawable/bg_circle_white"-->
+<!--            android:padding="12dp"-->
+<!--            android:src="@drawable/ic_plus"-->
+<!--            app:tint="@color/teal_primary" />-->
+<!--    </LinearLayout>-->
+
+<!--    &lt;!&ndash; Danh sách chuyến đi &ndash;&gt;-->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rv_trips"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:padding="16dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/header_layout" />-->
+
+<!--    &lt;!&ndash; Thanh Menu Dưới &ndash;&gt;-->
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/bottom_navigation"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="70dp"-->
+<!--        android:background="@color/white"-->
+<!--        app:itemActiveIndicatorStyle="@null"-->
+<!--        app:itemIconSize="24dp"-->
+<!--        app:itemRippleColor="@color/teal_light"-->
+<!--        app:labelVisibilityMode="labeled"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:menu="@menu/bottom_nav_menu"-->
+<!--        app:itemTextAppearanceActive="@style/BottomNavActiveText"/>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+
