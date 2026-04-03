@@ -25,6 +25,17 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     private List<ExpenseCategory> categoryList = new ArrayList<>();
     private DecimalFormat formatter = new DecimalFormat("#,###");
 
+    // Khai báo Interface để bắt sự kiện click
+    private OnExpenseItemClickListener listener;
+
+    public interface OnExpenseItemClickListener {
+        void onExpenseClick(Expense expense);
+    }
+
+    public void setOnExpenseItemClickListener(OnExpenseItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public void setData(List<Expense> expenses, List<ExpenseCategory> categories) {
         this.expenseList = expenses;
         this.categoryList = categories;
@@ -64,13 +75,19 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         } else if (categoryName.toLowerCase().contains("ăn")) {
             holder.flIconBg.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#E8F5E9")));
             holder.ivIcon.setColorFilter(Color.parseColor("#4CAF50"));
-            // Thay bằng icon ăn uống của bạn, tạm dùng icon mặc định
             holder.ivIcon.setImageResource(android.R.drawable.ic_menu_manage);
         } else {
             holder.flIconBg.setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#E3F2FD")));
             holder.ivIcon.setColorFilter(Color.parseColor("#2196F3"));
             holder.ivIcon.setImageResource(android.R.drawable.ic_menu_agenda);
         }
+
+        // Bắt sự kiện click vào item
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onExpenseClick(expense);
+            }
+        });
     }
 
     @Override

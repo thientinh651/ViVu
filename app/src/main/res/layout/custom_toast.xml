@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:text="Thông báo của bạn ở đây"
+        android:text=""
         android:textColor="#37474F"
         android:textSize="15sp"
         android:textStyle="bold" />

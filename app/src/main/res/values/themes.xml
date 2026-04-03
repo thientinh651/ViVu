@@ -1,12 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- Base application theme -->
     <style name="Base.Theme.Vivu" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- toàn bộ popup menu nền trắng -->
+        <item name="android:popupMenuStyle">@style/WhitePopupMenu</item>
+        <item name="android:popupBackground">@android:color/white</item>
     </style>
 
     <style name="Theme.Vivu" parent="Base.Theme.Vivu" />
+
     <style name="BottomNavActiveText">
         <item name="android:textStyle">bold</item>
     </style>
+
+    <!-- Style riêng cho popup menu -->
+    <style name="WhitePopupMenu" parent="@style/Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
 </resources>

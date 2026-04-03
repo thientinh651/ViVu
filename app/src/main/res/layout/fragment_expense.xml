@@ -100,7 +100,7 @@
                         android:id="@+id/tv_total_spent_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tổng Chi Tiêu"
+                        android:text="Tổng chi tiêu"
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
@@ -112,7 +112,7 @@
                         android:backgroundTint="#33FFFFFF"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
-                        android:text="Xem Tổng Kết"
+                        android:text="Xem tổng kết"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
@@ -209,7 +209,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tổng Quan Ngân Sách"
+                        android:text="Tổng quan ngân sách"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -311,7 +311,7 @@
                 android:layout_height="56dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:text="+  Thêm Chi Tiêu"
+                android:text="+  Thêm chi tiêu"
                 app:backgroundTint="#0072FF"
                 android:textColor="@android:color/white"
                 android:textAllCaps="false"
@@ -323,7 +323,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="20dp"
-                android:text="Chi Tiêu Gần Đây"
+                android:text="Chi tiêu gần đây"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />

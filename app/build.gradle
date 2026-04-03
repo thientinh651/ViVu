@@ -49,4 +49,8 @@ dependencies {
     
     // Media dependency for MediaSessionCompat and MediaStyle
     implementation 'androidx.media:media:1.7.0'
+
+    // cài đặt Glide
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 }
