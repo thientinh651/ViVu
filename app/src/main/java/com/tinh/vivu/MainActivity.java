@@ -299,14 +299,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Bật lại EdgeToEdge để app tràn viền hiện đại
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // BÍ QUYẾT Ở ĐÂY: Áp dụng khoảng đệm (padding) TRỰC TIẾP lên thanh Menu.
-        // Nó sẽ tự động đẩy các icon lên cao hơn thanh điều hướng ảo của máy.
+        // Áp dụng khoảng đệm (padding) TRỰC TIẾP lên thanh Menu.
+        // Tự động đẩy các icon lên cao hơn thanh điều hướng ảo của máy.
         ViewCompat.setOnApplyWindowInsetsListener(bottomNavigationView, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(0, 0, 0, systemBars.bottom);
@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment())
                     .commit();
-            // Đánh dấu icon Home đang được chọn
+
             bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
 
@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new MoreFragment();
             }
 
-            // Chuyển Fragment cực mượt với hiệu ứng mờ dần
+           
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)

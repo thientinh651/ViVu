@@ -25,7 +25,7 @@ public class Expense {
     @PrimaryKey(autoGenerate = true)
     private int expenseId;
 
-    // Dùng Integer thay vì int để cho phép giá trị null (vì chọn chuyến đi là KHÔNG BẮT BUỘC)
+    // Dùng Integer thay vì int để cho phép giá trị null (vì chọn chuyến đi là ko bắt buoc)
     private Integer tripId;
 
     private int categoryId;

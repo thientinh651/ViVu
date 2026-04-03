@@ -16,17 +16,17 @@ public class Trip {
     private String status; // Upcoming, Planning, Completed...
     private long createdAt;
 
-    // Constructor khớp với dữ liệu Demo trong AppDatabase
+
     public Trip(String name, String startDate, String endDate, double totalBudget, String status) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalBudget = totalBudget;
         this.status = status;
-        this.createdAt = System.currentTimeMillis(); // Tự động lấy thời gian tạo
+        this.createdAt = System.currentTimeMillis();
     }
 
-    // --- Getters và Setters ---
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

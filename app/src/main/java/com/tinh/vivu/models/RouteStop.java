@@ -5,31 +5,18 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "route_stops")
 public class RouteStop {
-
     @PrimaryKey(autoGenerate = true)
     private int id; // point_id
-
     private int tripId; // trip_id
-
-    private String locationName; // location_name
-
-    // Đã đổi từ orderNumber thành orderIndex
-    private int orderIndex; // order_index
-
-    // === THÊM CÁC THUỘC TÍNH MỚI THEO YÊU CẦU ===
-
-    // Thời gian dự kiến (Lưu dưới dạng chuỗi String, VD: "01:01 11-01")
+    private String locationName;
+    private int orderIndex;
     private String expectedArrival;
     private String expectedDeparture;
-
-    // Thời gian thực tế
     private String actualArrival;
     private String actualDeparture;
-
-    // Trạng thái: Đã đến nơi chưa?
     private boolean isArrived;
 
-    // Constructor để tạo mới một điểm dừng
+
     public RouteStop(int tripId, String locationName, int orderIndex, String expectedArrival, String expectedDeparture) {
         this.tripId = tripId;
         this.locationName = locationName;
@@ -43,7 +30,6 @@ public class RouteStop {
         this.isArrived = false;
     }
 
-    // --- Getters và Setters ---
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

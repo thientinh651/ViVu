@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Quản Lý Chuyến Đi"
+                    android:text="QUẢN LÝ CHUYẾN ĐI"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />

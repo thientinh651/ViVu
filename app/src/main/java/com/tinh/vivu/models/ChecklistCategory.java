@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey;
 public class ChecklistCategory {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int tripId; // Thuộc chuyến đi nào
-    private String name; // Tên nhóm: Đồ bảo hộ, Gear, Vehicle...
+    private int tripId;
+    private String name;
 
     public ChecklistCategory(int tripId, String name) {
         this.tripId = tripId;

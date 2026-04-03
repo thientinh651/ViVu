@@ -94,9 +94,13 @@ public class TripDetailActivity extends AppCompatActivity {
             }
         });
 
-        tabPlanning.setOnClickListener(v -> updateTripStatus("Lên kế hoạch"));
-        tabOngoing.setOnClickListener(v -> updateTripStatus("Đang đi"));
-        tabCompleted.setOnClickListener(v -> updateTripStatus("Hoàn thành"));
+//        tabPlanning.setOnClickListener(v -> updateTripStatus("Lên kế hoạch"));
+//        tabOngoing.setOnClickListener(v -> updateTripStatus("Đang đi"));
+//        tabCompleted.setOnClickListener(v -> updateTripStatus("Hoàn thành"));
+
+        tabPlanning.setOnClickListener(v -> updateTripStatus("Planning"));
+        tabOngoing.setOnClickListener(v -> updateTripStatus("Ongoing"));
+        tabCompleted.setOnClickListener(v -> updateTripStatus("Completed"));
 
         currentTripId = getIntent().getIntExtra("TRIP_ID", -1);
         if (currentTripId != -1) {
@@ -132,10 +136,10 @@ public class TripDetailActivity extends AppCompatActivity {
         tabCompleted.setTextColor(Color.WHITE);
 
         int tealColor = Color.parseColor("#00897B");
-        if ("Đang đi".equals(status)) {
+        if ("Ongoing".equals(status)) {
             tabOngoing.setBackgroundResource(R.drawable.bg_tab_active);
             tabOngoing.setTextColor(tealColor);
-        } else if ("Hoàn thành".equals(status)) {
+        } else if ("Completed   q".equals(status)) {
             tabCompleted.setBackgroundResource(R.drawable.bg_tab_active);
             tabCompleted.setTextColor(tealColor);
         } else {

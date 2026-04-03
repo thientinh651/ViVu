@@ -42,6 +42,7 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
     private ProgressBar progressBar;
     private TextView tvProgressPercent, tvItemsCompleted;
     private Button btnAddItem, btnAddList;
+    private TextView btnResetChecklist; // Khai báo nút reset
     private RecyclerView rvCategories;
 
     private ChecklistCategoryAdapter categoryAdapter;
@@ -75,6 +76,7 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
         tvItemsCompleted = view.findViewById(R.id.tv_items_completed);
         btnAddItem = view.findViewById(R.id.btn_add_item);
         btnAddList = view.findViewById(R.id.btn_add_list);
+        btnResetChecklist = view.findViewById(R.id.btn_reset_checklist); // Ánh xạ nút reset
         rvCategories = view.findViewById(R.id.rv_checklist_categories);
     }
 
@@ -84,7 +86,6 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
     }
 
     private void setupRecyclerView() {
-        // Đã sửa requireContext() thành this
         categoryAdapter = new ChecklistCategoryAdapter(this, new ChecklistCategoryAdapter.OnCategoryActionListener() {
             @Override
             public void onCategoryReset(ChecklistCategory category) {
@@ -132,6 +133,27 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
     private void setupListeners() {
         btnAddList.setOnClickListener(v -> showAddListDialog());
         btnAddItem.setOnClickListener(v -> showAddItemDialog());
+
+
+        btnResetChecklist.setOnClickListener(v -> {
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Xác nhận Reset")
+                    .setMessage("Bạn có chắc chắn muốn bỏ tích tất cả các món đồ không?")
+                    .setPositiveButton("Reset", (dialog, which) -> {
+                        executorService.execute(() -> {
+                            // Gọi hàm reset toàn bộ task của chuyến đi hiện tại
+                            checklistDao.resetAllTasksByTripId(currentTripId);
+                            if (getActivity() != null) {
+                                getActivity().runOnUiThread(() -> {
+                                    Toast.makeText(requireContext(), "Đã reset toàn bộ checklist", Toast.LENGTH_SHORT).show();
+                                    loadChecklistData();
+                                });
+                            }
+                        });
+                    })
+                    .setNegativeButton("Hủy", null)
+                    .show();
+        });
     }
 
     private void loadChecklistData() {
@@ -322,7 +344,7 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
     @Override
     public void onTaskEdit(ChecklistTask task) {
         EditText input = new EditText(requireContext());
-        input.setText(task.getName()); // Lưu ý: Nếu model của bạn đặt tên hàm get khác, hãy đổi lại (VD: getTaskName())
+        input.setText(task.getName());
         input.setPadding(50, 50, 50, 50);
 
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
@@ -331,7 +353,7 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
                 .setPositiveButton("Cập nhật", (dialog, which) -> {
                     String newName = input.getText().toString().trim();
                     if (!newName.isEmpty()) {
-                        task.setName(newName); // Lưu ý: Đổi lại theo tên hàm set trong model nếu cần
+                        task.setName(newName);
                         executorService.execute(() -> {
                             checklistDao.updateTask(task);
                             loadChecklistData();
@@ -347,6 +369,5 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Không shutdown executorService ở đây vì AppDatabase dùng chung pool thread, shutdown sẽ làm chết app.
     }
 }

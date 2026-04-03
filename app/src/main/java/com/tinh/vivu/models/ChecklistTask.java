@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey;
 public class ChecklistTask {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int categoryId; // Thuộc nhóm nào
-    private int tripId; // Thuộc chuyến đi nào
+    private int categoryId;
+    private int tripId;
     private String name;
     private boolean isCompleted;
-    private long completedAt; // Thời gian hoàn thành
+    private long completedAt;
     private long createdAt;
 
     public ChecklistTask(int categoryId, int tripId, String name) {
