@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F9FA">
+
+    <!-- Header có chữ Smart Alarm -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="24dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_timer"
+            app:tint="#333333" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="Smart Alarm"
+            android:textColor="#333333"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+<!--        <ImageView-->
+<!--            android:layout_width="24dp"-->
+<!--            android:layout_height="24dp"-->
+<!--            android:src="@drawable/ic_list_checks"-->
+<!--            app:tint="#333333" />-->
+    </LinearLayout>
+
+    <!-- Thanh Tabs điều hướng: TÔI ĐÃ XÓA SẠCH THẺ CARDVIEW GÂY LỖI KẸT NỀN -->
+    <LinearLayout
+        android:id="@+id/top_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="16dp"
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@id/header_layout">
+
+        <!-- Tab Alarm (Bây giờ chỉ là một TextView thuần túy) -->
+        <TextView
+            android:id="@+id/tab_alarm"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Alarm"
+            android:textColor="#9D76F5"
+            android:textStyle="bold" />
+
+        <!-- Tab Timer -->
+        <TextView
+            android:id="@+id/tab_timer"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Timer"
+            android:textColor="#9E9E9E" />
+    </LinearLayout>
+
+    <!-- Khung chứa nội dung -->
+    <FrameLayout
+        android:id="@+id/clock_content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/top_tabs"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

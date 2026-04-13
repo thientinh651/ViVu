@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
 
     <application
         android:allowBackup="true"
@@ -22,9 +26,9 @@
         <activity
             android:name=".Expense"
             android:exported="false" />
-        <activity
-            android:name=".activity_check_list"
-            android:exported="false" /> <!-- <activity -->
+        <!--        <activity-->
+        <!--            android:name=".activity_check_list"-->
+        <!--            android:exported="false" /> &lt;!&ndash; <activity &ndash;&gt;-->
         <!-- android:name=".CheckList" -->
         <!-- android:exported="false" /> -->
         <activity
@@ -55,6 +59,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <receiver android:name=".services.TimerReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver android:name=".services.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

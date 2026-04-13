@@ -7,6 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.tinh.vivu.models.Alarm;
 import com.tinh.vivu.models.ChecklistCategory;
 import com.tinh.vivu.models.ChecklistTask;
 import com.tinh.vivu.models.Expense;
@@ -26,7 +27,7 @@ import java.util.concurrent.Executors;
         ChecklistCategory.class, ChecklistTask.class,
         ExpenseCategory.class, Expense.class,
         Song.class, PlayList.class, PlayListSong.class,
-        JourneyLog.class
+        JourneyLog.class,Alarm.class
 }, version = 8, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -41,6 +42,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PlayListDao playListDao();
     public abstract PlayListSongDao playListSongDao();
     public abstract JourneyLogDao journeyLogDao();
+    public abstract AlarmDao alarmDao();
+
 
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =
@@ -68,6 +71,8 @@ public abstract class AppDatabase extends RoomDatabase {
                 ExpenseCategoryDao expenseCategoryDao = instance.expenseCategoryDao();
                 ExpenseDao expenseDao = instance.expenseDao();
                 PlayListDao playListDao = instance.playListDao();
+                AlarmDao alarmDao = instance.alarmDao();
+
 
                 // Dữ liệu mẫu ban đầu của bạn
                 Trip trip1 = new Trip("Khám phá Tây Bắc", "01/01/2026", "29/06/2026", 5000000, "Planning");
@@ -103,6 +108,11 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 playListDao.insert(new PlayList("Nhạc Đi Phượt"));
                 playListDao.insert(new PlayList("Nhạc Thư Giãn"));
+
+                alarmDao.insert(new Alarm(6, 0, "Wake up", "Everyday", true));
+                alarmDao.insert(new Alarm(7, 0, "Fitness", "Everyday", true));
+                alarmDao.insert(new Alarm(8, 45, "Study", "Mon, Tue, Fri", true));
+                alarmDao.insert(new Alarm(12, 30, "Lunch", "Mon, Tue, Fri", false));
             });
         }
     };

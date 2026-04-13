@@ -30,7 +30,19 @@ public class MoreFragment extends Fragment {
         });
 
         view.findViewById(R.id.btn_menu_maintenance).setOnClickListener(v -> showToast("Maintenance"));
-        view.findViewById(R.id.btn_menu_rest).setOnClickListener(v -> showToast("Rest Timer"));
+//        view.findViewById(R.id.btn_menu_rest).setOnClickListener(v -> showToast("Rest Timer"));
+//        view.findViewById(R.id.btn_menu_rest).setOnClickListener(v -> {
+//            getParentFragmentManager().beginTransaction()
+//                    .replace(R.id.fragment_container, new RestTimerFragment())
+//                    .addToBackStack(null)
+//                    .commit();
+//        });
+        view.findViewById(R.id.btn_menu_rest).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ClockHostFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
         view.findViewById(R.id.btn_menu_currency).setOnClickListener(v -> showToast("Currency"));
         view.findViewById(R.id.btn_menu_settings).setOnClickListener(v -> showToast("Settings"));
 
