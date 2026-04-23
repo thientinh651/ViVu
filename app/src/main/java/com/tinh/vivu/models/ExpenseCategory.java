@@ -30,7 +30,6 @@ public class ExpenseCategory {
         this.categoryName = categoryName;
     }
 
-    // Override toString để hiển thị tên danh mục trực tiếp trên Spinner (Dropdown)
     @Override
     public String toString() {
         return categoryName;

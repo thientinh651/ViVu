@@ -39,6 +39,19 @@
             android:textStyle="bold"
             android:layout_centerVertical="true" />
 
+        <!-- Nút + Quản lý ĐÃ ĐƯỢC THÊM LẠI VÀO ĐÂY -->
+        <TextView
+            android:id="@+id/tv_manage_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="+ Quản lý"
+            android:textColor="#0072FF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:padding="4dp" />
+
     </RelativeLayout>
 
     <Spinner

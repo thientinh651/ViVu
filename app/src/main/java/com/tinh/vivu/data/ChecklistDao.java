@@ -14,12 +14,12 @@ import java.util.List;
 @Dao
 public interface ChecklistDao {
 
-    // --- Thao tác với Danh mục (ChecklistCategory) ---
+
     @Insert
     void insertCategory(ChecklistCategory category);
 
     @Update
-    void updateCategory(ChecklistCategory category); // Hàm Cập nhật (Đổi tên) danh mục
+    void updateCategory(ChecklistCategory category);
 
     @Query("SELECT * FROM checklist_categories WHERE tripId = :tripId")
     List<ChecklistCategory> getCategoriesByTripId(int tripId);
@@ -54,4 +54,7 @@ public interface ChecklistDao {
     // Xóa tất cả các Item bên trong khi người dùng Xóa 1 danh mục
     @Query("DELETE FROM checklist_tasks WHERE categoryId = :categoryId")
     void deleteTasksByCategoryId(int categoryId);
+    // Reset tất cả các Task trong Trip
+    @Query("UPDATE checklist_tasks SET isCompleted = 0, completedAt = 0 WHERE tripId = :tripId")
+    void resetAllTasksByTripId(int tripId);
 }

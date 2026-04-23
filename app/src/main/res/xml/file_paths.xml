@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Cho phép truy cập vào thư mục files của ứng dụng -->
+    <files-path name="my_images" path="." />
+    <!-- Cho phép truy cập vào thư mục cache nếu cần -->
+    <cache-path name="my_cache" path="." />
+    <!-- Cho phép truy cập vào bộ nhớ ngoài (nếu có dùng) -->
+    <external-path name="external_files" path="." />
+</paths>

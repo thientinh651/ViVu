@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA">
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/diary_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E91E63"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="48dp"
+        android:paddingBottom="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Travel Diary"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Capture your memories"
+            android:textColor="#FCE4EC"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Stats Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/stats_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/diary_header"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="-25dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <TextView android:id="@+id/tv_total_entries" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#E91E63"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Entries" android:textSize="12sp" android:textColor="#757575"/>
+            </LinearLayout>
+
+            <View android:layout_width="1dp" android:layout_height="30dp" android:layout_gravity="center_vertical" android:background="#EEEEEE"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+                <TextView android:id="@+id/tv_total_photos" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#2196F3"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Photos" android:textSize="12sp" android:textColor="#757575"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Ô tìm kiếm đã thêm vào đây -->
+    <EditText
+        android:id="@+id/edt_search_diary"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/stats_card"
+        android:layout_margin="16dp"
+        android:background="#F0F0F0"
+        android:hint="Tìm kiếm nhật ký..."
+        android:paddingHorizontal="16dp"
+        android:textSize="14sp" />
+
+    <!-- Danh sách nhật ký -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_diary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/edt_search_diary"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp" />
+
+    <!-- Nút thêm mới đổi ID thành fab_add_diary cho khớp Java -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_diary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="24dp"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:backgroundTint="#E91E63"
+        app:tint="@color/white" />
+
+</RelativeLayout>

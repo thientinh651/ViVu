@@ -5,4 +5,5 @@
     <color name="teal_primary">#008080</color>
     <color name="teal_light">#E0F2F1</color>
     <color name="gray_bg">#F5F5F5</color>
+    <color name="placeholder_gray">#EEEEEE</color>
 </resources>

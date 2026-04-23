@@ -23,7 +23,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
 
     public interface OnTripClickListener {
         void onDeleteClick(Trip trip);
-        void onEditClick(Trip trip); // THÊM SỰ KIỆN SỬA
+        void onEditClick(Trip trip);
         void onTripClick(Trip trip);
     }
 
@@ -56,17 +56,17 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
         String formattedBudget = formatter.format(currentTrip.getTotalBudget());
         holder.tvTripBudget.setText(formattedBudget + " VNĐ");
 
-        // Bấm Xóa
+
         holder.btnDeleteTrip.setOnClickListener(v -> {
             if (listener != null) listener.onDeleteClick(currentTrip);
         });
 
-        // Bấm Sửa (Bút chì)
+
         holder.btnEditTrip.setOnClickListener(v -> {
             if (listener != null) listener.onEditClick(currentTrip);
         });
 
-        // Bấm vào xem chi tiết
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onTripClick(currentTrip);
         });
@@ -84,7 +84,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
 
     static class TripHolder extends RecyclerView.ViewHolder {
         private TextView tvTripName, tvTripStatus, tvTripDate, tvTripBudget;
-        private ImageView btnDeleteTrip, btnEditTrip; // THÊM KHAI BÁO NÚT SỬA
+        private ImageView btnDeleteTrip, btnEditTrip;
 
         public TripHolder(@NonNull View itemView) {
             super(itemView);
