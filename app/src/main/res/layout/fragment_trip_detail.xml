@@ -6,7 +6,6 @@
     android:background="#F5F6F8"
     android:fitsSystemWindows="true">
 
-    <!-- Header Xanh Lá -->
     <LinearLayout
         android:id="@+id/header_detail"
         android:layout_width="match_parent"
@@ -27,15 +26,15 @@
                 android:id="@+id/btn_back"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_chevron_right"
                 android:rotation="180"
+                android:src="@drawable/ic_chevron_right"
                 app:tint="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Quay lại"
+                android:text="@string/common_back"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -45,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Tên Chuyến Đi"
+            android:text="@string/trip_detail_title_placeholder"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -59,7 +58,6 @@
             android:textColor="#E0F2F1"
             android:textSize="14sp" />
 
-        <!-- 3 TAB TRẠNG THÁI -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,7 +72,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingVertical="8dp"
-                android:text="Planning"
+                android:text="@string/trip_detail_tab_planning"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -86,7 +84,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingVertical="8dp"
-                android:text="Ongoing"
+                android:text="@string/trip_detail_tab_ongoing"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -98,7 +96,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingVertical="8dp"
-                android:text="Completed"
+                android:text="@string/trip_detail_tab_completed"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -111,7 +109,7 @@
         android:layout_height="56dp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:text="+ Thêm Điểm Dừng"
+        android:text="@string/trip_detail_add_stop"
         android:textAllCaps="false"
         android:textSize="16sp"
         app:backgroundTint="#00897B"

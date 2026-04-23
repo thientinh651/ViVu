@@ -21,18 +21,26 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.tinh.vivu.R;
 import com.tinh.vivu.data.AppDatabase;
 import com.tinh.vivu.models.Alarm;
+import com.tinh.vivu.utils.ValidationUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.Locale;
 
 public class AddAlarmBottomSheet extends BottomSheetDialogFragment {
+    private static final int MAX_ALARM_LABEL_LENGTH = 40;
 
     private TimePicker timePicker;
     private LinearLayout layoutDays;
     private EditText etAlarmName;
     private SwitchCompat switchVibrate;
     private boolean[] selectedDays = new boolean[7];
-    private String[] dayNames = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+    private final String[] dayTokens = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+    private String[] dayDisplayNames;
+
+    private static final String REPEAT_EVERYDAY = "Everyday";
+    private static final String REPEAT_WEEKDAYS = "Weekdays";
+    private static final String REPEAT_ONCE = "Once";
 
     private Alarm alarmToEdit = null; // Biến lưu báo thức nếu đang ở chế độ SỬA
     private OnAlarmAddedListener listener;
@@ -65,6 +73,15 @@ public class AddAlarmBottomSheet extends BottomSheetDialogFragment {
         layoutDays = view.findViewById(R.id.layout_days);
         etAlarmName = view.findViewById(R.id.et_alarm_name);
         switchVibrate = view.findViewById(R.id.switch_vibrate);
+        dayDisplayNames = new String[]{
+                getString(R.string.alarm_day_mon),
+                getString(R.string.alarm_day_tue),
+                getString(R.string.alarm_day_wed),
+                getString(R.string.alarm_day_thu),
+                getString(R.string.alarm_day_fri),
+                getString(R.string.alarm_day_sat),
+                getString(R.string.alarm_day_sun)
+        };
 
         // Kiểm tra xem có phải chế độ SỬA không
         if (getArguments() != null) {
@@ -88,7 +105,7 @@ public class AddAlarmBottomSheet extends BottomSheetDialogFragment {
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
             params.setMargins(4, 0, 4, 0);
             tvDay.setLayoutParams(params);
-            tvDay.setText(dayNames[i]);
+            tvDay.setText(dayDisplayNames[i]);
             tvDay.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tvDay.setPadding(0, 20, 0, 20);
             tvDay.setTextSize(11f);
@@ -128,15 +145,15 @@ public class AddAlarmBottomSheet extends BottomSheetDialogFragment {
 
         // Đổ ngày tháng
         String days = alarmToEdit.getDaysOfWeek();
-        if (days.equals("Everyday")) {
+        if (REPEAT_EVERYDAY.equalsIgnoreCase(days)) {
             for(int i=0; i<7; i++) selectedDays[i] = true;
-        } else if (days.equals("Weekdays")) {
+        } else if (REPEAT_WEEKDAYS.equalsIgnoreCase(days)) {
             for(int i=0; i<7; i++) selectedDays[i] = (i < 5);
-        } else if (days.equals("Once")) {
+        } else if (REPEAT_ONCE.equalsIgnoreCase(days)) {
             for(int i=0; i<7; i++) selectedDays[i] = false;
         } else {
             for (int i=0; i<7; i++) {
-                selectedDays[i] = days.contains(dayNames[i]);
+                selectedDays[i] = containsDayToken(days, dayTokens[i], dayDisplayNames[i]);
             }
         }
 
@@ -176,7 +193,15 @@ public class AddAlarmBottomSheet extends BottomSheetDialogFragment {
 
         // 2. Chốt cứng Tên báo thức (label)
         String rawLabel = etAlarmName.getText().toString().trim();
-        final String label = rawLabel.isEmpty() ? "Alarm" : rawLabel;
+        etAlarmName.setError(null);
+        if (!rawLabel.isEmpty()
+                && !ValidationUtils.isValidDisplayName(rawLabel, 2, MAX_ALARM_LABEL_LENGTH)) {
+            etAlarmName.setError(getString(R.string.alarm_error_invalid_label));
+            etAlarmName.requestFocus();
+            Toast.makeText(requireContext(), R.string.alarm_error_invalid_label_toast, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final String label = rawLabel.isEmpty() ? getString(R.string.alarm_default_label) : rawLabel;
 
         // 3. Tính toán ngày lặp lại
         StringBuilder daysStr = new StringBuilder();
@@ -184,15 +209,15 @@ public class AddAlarmBottomSheet extends BottomSheetDialogFragment {
         for (int i = 0; i < 7; i++) {
             if (selectedDays[i]) {
                 if (daysStr.length() > 0) daysStr.append(", ");
-                daysStr.append(dayNames[i]);
+                daysStr.append(dayTokens[i]);
                 count++;
             }
         }
 
         String tempDays = daysStr.toString();
-        if (count == 7) tempDays = "Everyday";
-        else if (count == 5 && selectedDays[0] && selectedDays[1] && selectedDays[2] && selectedDays[3] && selectedDays[4]) tempDays = "Weekdays";
-        else if (count == 0) tempDays = "Once";
+        if (count == 7) tempDays = REPEAT_EVERYDAY;
+        else if (count == 5 && selectedDays[0] && selectedDays[1] && selectedDays[2] && selectedDays[3] && selectedDays[4]) tempDays = REPEAT_WEEKDAYS;
+        else if (count == 0) tempDays = REPEAT_ONCE;
 
         // Chốt cứng kết quả chuỗi ngày
         final String finalDays = tempDays;
@@ -221,11 +246,21 @@ public class AddAlarmBottomSheet extends BottomSheetDialogFragment {
 
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), alarmToEdit == null ? "Đã thêm!" : "Đã sửa!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                            requireContext(),
+                            alarmToEdit == null ? R.string.alarm_toast_added : R.string.alarm_toast_updated,
+                            Toast.LENGTH_SHORT
+                    ).show();
                     if (listener != null) listener.onAlarmAdded();
                     dismiss();
                 });
             }
         });
+    }
+
+    private boolean containsDayToken(String source, String dayToken, String displayToken) {
+        String normalizedSource = source == null ? "" : source.toLowerCase(Locale.ROOT);
+        return normalizedSource.contains(dayToken.toLowerCase(Locale.ROOT))
+                || normalizedSource.contains(displayToken.toLowerCase(Locale.ROOT));
     }
 }

@@ -12,7 +12,7 @@
         android:id="@+id/tv_summary_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tổng Kết"
+        android:text="@string/expense_summary_title"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="18sp"
@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ngân sách dự kiến:"
+                android:text="@string/expense_summary_budget_label"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/tv_summary_budget"
@@ -51,7 +51,7 @@
                 android:layout_alignParentEnd="true"
                 android:textColor="#0055FF"
                 android:textStyle="bold"
-                android:text="0 đ" />
+                android:text="@string/common_amount_zero_vnd" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tổng đã chi:"
+                android:text="@string/expense_summary_spent_label"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/tv_summary_spent"
@@ -70,7 +70,7 @@
                 android:layout_alignParentEnd="true"
                 android:textColor="#FF4444"
                 android:textStyle="bold"
-                android:text="0 đ" />
+                android:text="@string/common_amount_zero_vnd" />
         </RelativeLayout>
 
         <View
@@ -85,7 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Số tiền còn lại:"
+                android:text="@string/expense_summary_remaining_label"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
@@ -97,7 +97,7 @@
                 android:textColor="#00AA55"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:text="0 đ" />
+                android:text="@string/common_amount_zero_vnd" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -106,7 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
-        android:text="Đóng"
+        android:text="@string/common_close"
         app:backgroundTint="#0072FF"
         android:textColor="@android:color/white"
         android:textAllCaps="false"

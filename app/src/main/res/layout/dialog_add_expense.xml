@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chuyến đi"
+        android:text="@string/expense_dialog_trip_label"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         android:textStyle="bold" />
@@ -33,20 +33,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Loại chi tiêu"
+            android:text="@string/expense_dialog_category_label"
             android:textColor="@android:color/black"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_centerVertical="true" />
 
-        <!-- Nút + Quản lý ĐÃ ĐƯỢC THÊM LẠI VÀO ĐÂY -->
         <TextView
             android:id="@+id/tv_manage_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="+ Quản lý"
+            android:text="@string/expense_dialog_manage_category"
             android:textColor="#0072FF"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -66,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Số tiền (VNĐ)"
+        android:text="@string/expense_dialog_amount_label"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         android:textStyle="bold" />
@@ -79,6 +78,7 @@
         android:background="#F5F6F8"
         android:hint="0"
         android:inputType="numberDecimal"
+        android:maxLength="15"
         android:paddingHorizontal="16dp"
         android:textColor="@android:color/black" />
 
@@ -86,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Mô tả"
+        android:text="@string/expense_dialog_description_label"
         android:textColor="@android:color/black"
         android:textSize="14sp"
         android:textStyle="bold" />
@@ -97,8 +97,9 @@
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
         android:background="#F5F6F8"
-        android:hint="Mua gì?"
+        android:hint="@string/expense_dialog_note_hint"
         android:inputType="textCapSentences"
+        android:maxLength="120"
         android:paddingHorizontal="16dp"
         android:textColor="@android:color/black" />
 
@@ -114,7 +115,7 @@
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="Thêm"
+            android:text="@string/common_add"
             app:backgroundTint="#0072FF"
             android:textColor="@android:color/white"
             android:textAllCaps="false"
@@ -127,7 +128,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Hủy"
+            android:text="@string/common_cancel"
             android:textAllCaps="false"
             android:textColor="@android:color/black"
             app:cornerRadius="8dp"

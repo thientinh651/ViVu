@@ -27,6 +27,7 @@ import com.tinh.vivu.data.AppDatabase;
 import com.tinh.vivu.data.ChecklistDao;
 import com.tinh.vivu.models.ChecklistCategory;
 import com.tinh.vivu.models.ChecklistTask;
+import com.tinh.vivu.utils.ValidationUtils;
 import com.tinh.vivu.views.ChecklistCategoryAdapter;
 import com.tinh.vivu.views.ChecklistTaskAdapter;
 
@@ -38,6 +39,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.OnTaskActionListener {
+    private static final int MIN_CATEGORY_NAME_LENGTH = 2;
+    private static final int MAX_CATEGORY_NAME_LENGTH = 40;
+    private static final int MIN_ITEM_NAME_LENGTH = 2;
+    private static final int MAX_ITEM_NAME_LENGTH = 60;
 
     private ProgressBar progressBar;
     private TextView tvProgressPercent, tvItemsCompleted;
@@ -51,6 +56,7 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
 
     private int currentTripId = 1;
     private List<ChecklistCategory> currentCategories = new ArrayList<>();
+    private Map<Integer, List<ChecklistTask>> currentTaskMap = new HashMap<>();
 
     @Nullable
     @Override
@@ -93,7 +99,11 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
                     checklistDao.resetChecklistByCategory(category.getId());
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(), "Đã reset nhóm " + category.getName(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.checklist_toast_reset_group, category.getName()),
+                                        Toast.LENGTH_SHORT
+                                ).show();
                             loadChecklistData();
                         });
                     }
@@ -108,21 +118,25 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
             @Override
             public void onCategoryDelete(ChecklistCategory category) {
                 new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                        .setTitle("Xác nhận xóa")
-                        .setMessage("Bạn có chắc muốn xóa nhóm '" + category.getName() + "' và toàn bộ đồ đạc bên trong không?")
-                        .setPositiveButton("Xóa", (dialog, which) -> {
+                        .setTitle(R.string.checklist_dialog_delete_title)
+                        .setMessage(getString(R.string.checklist_dialog_delete_category_message, category.getName()))
+                        .setPositiveButton(R.string.common_delete, (dialog, which) -> {
                             executorService.execute(() -> {
                                 checklistDao.deleteTasksByCategoryId(category.getId());
                                 checklistDao.deleteCategory(category);
                                 if (getActivity() != null) {
                                     getActivity().runOnUiThread(() -> {
-                                        Toast.makeText(requireContext(), "Đã xóa " + category.getName(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(
+                                                requireContext(),
+                                                getString(R.string.checklist_toast_deleted_group, category.getName()),
+                                                Toast.LENGTH_SHORT
+                                        ).show();
                                         loadChecklistData();
                                     });
                                 }
                             });
                         })
-                        .setNegativeButton("Hủy", null)
+                        .setNegativeButton(R.string.common_cancel, null)
                         .show();
             }
         });
@@ -137,21 +151,21 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
 
         btnResetChecklist.setOnClickListener(v -> {
             new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                    .setTitle("Xác nhận Reset")
-                    .setMessage("Bạn có chắc chắn muốn bỏ tích tất cả các món đồ không?")
-                    .setPositiveButton("Reset", (dialog, which) -> {
+                    .setTitle(R.string.checklist_dialog_reset_title)
+                    .setMessage(R.string.checklist_dialog_reset_message)
+                    .setPositiveButton(R.string.common_reset, (dialog, which) -> {
                         executorService.execute(() -> {
                             // Gọi hàm reset toàn bộ task của chuyến đi hiện tại
-                            checklistDao.resetAllTasksByTripId(currentTripId);
+                            checklistDao.resetTasksByTripId(currentTripId);
                             if (getActivity() != null) {
                                 getActivity().runOnUiThread(() -> {
-                                    Toast.makeText(requireContext(), "Đã reset toàn bộ checklist", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(requireContext(), R.string.checklist_toast_reset_all, Toast.LENGTH_SHORT).show();
                                     loadChecklistData();
                                 });
                             }
                         });
                     })
-                    .setNegativeButton("Hủy", null)
+                    .setNegativeButton(R.string.common_cancel, null)
                     .show();
         });
     }
@@ -185,6 +199,7 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
 
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
+                    currentTaskMap = taskMap;
                     categoryAdapter.setData(categories, taskMap);
                     updateProgressUI(progress, finalCompleted, totalTasks);
                 });
@@ -195,7 +210,7 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
     private void updateProgressUI(int percent, int completed, int total) {
         progressBar.setProgress(percent);
         tvProgressPercent.setText(percent + "%");
-        tvItemsCompleted.setText(completed + " of " + total + " items completed");
+        tvItemsCompleted.setText(getString(R.string.checklist_items_completed_format, completed, total));
     }
 
     private void showAddListDialog() {
@@ -210,16 +225,23 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
 
         btnAdd.setOnClickListener(v -> {
             String name = etListName.getText().toString().trim();
-            if (!name.isEmpty()) {
+            etListName.setError(null);
+            if (ValidationUtils.isNullOrEmpty(name)) {
+                etListName.setError(getString(R.string.checklist_error_enter_category_name));
+            } else if (!ValidationUtils.isValidDisplayName(name, MIN_CATEGORY_NAME_LENGTH, MAX_CATEGORY_NAME_LENGTH)) {
+                etListName.setError(getString(R.string.checklist_error_category_name_invalid));
+            } else if (ValidationUtils.isDuplicateName(name, getCategoryNamesExcept(null))) {
+                etListName.setError(getString(R.string.checklist_error_category_exists));
+            } else {
                 executorService.execute(() -> {
                     ChecklistCategory newCategory = new ChecklistCategory(currentTripId, name);
                     checklistDao.insertCategory(newCategory);
                     loadChecklistData();
                 });
                 dialog.dismiss();
-            } else {
-                Toast.makeText(requireContext(), "Vui lòng nhập tên danh mục", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Toast.makeText(requireContext(), etListName.getError(), Toast.LENGTH_SHORT).show();
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
@@ -242,20 +264,27 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
         Button btnCancel = dialog.findViewById(R.id.btn_cancel);
 
         etListName.setText(category.getName());
-        btnAdd.setText("Cập nhật");
+        btnAdd.setText(R.string.common_update);
 
         btnAdd.setOnClickListener(v -> {
             String name = etListName.getText().toString().trim();
-            if (!name.isEmpty()) {
+            etListName.setError(null);
+            if (ValidationUtils.isNullOrEmpty(name)) {
+                etListName.setError(getString(R.string.checklist_error_enter_category_name));
+            } else if (!ValidationUtils.isValidDisplayName(name, MIN_CATEGORY_NAME_LENGTH, MAX_CATEGORY_NAME_LENGTH)) {
+                etListName.setError(getString(R.string.checklist_error_category_name_invalid));
+            } else if (ValidationUtils.isDuplicateName(name, getCategoryNamesExcept(category))) {
+                etListName.setError(getString(R.string.checklist_error_category_exists));
+            } else {
                 category.setName(name);
                 executorService.execute(() -> {
                     checklistDao.updateCategory(category);
                     loadChecklistData();
                 });
                 dialog.dismiss();
-            } else {
-                Toast.makeText(requireContext(), "Vui lòng nhập tên danh mục", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Toast.makeText(requireContext(), etListName.getError(), Toast.LENGTH_SHORT).show();
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
@@ -269,7 +298,7 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
 
     private void showAddItemDialog() {
         if (currentCategories == null || currentCategories.isEmpty()) {
-            Toast.makeText(requireContext(), "Vui lòng tạo List (Danh mục) trước", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.checklist_toast_create_list_first, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -293,17 +322,29 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
         btnAdd.setOnClickListener(v -> {
             String itemName = etItemName.getText().toString().trim();
             int selectedPosition = spCategories.getSelectedItemPosition();
+            etItemName.setError(null);
 
-            if (!itemName.isEmpty() && selectedPosition >= 0) {
+            if (ValidationUtils.isNullOrEmpty(itemName)) {
+                etItemName.setError(getString(R.string.checklist_error_enter_item_name));
+            } else if (!ValidationUtils.isValidDisplayName(itemName, MIN_ITEM_NAME_LENGTH, MAX_ITEM_NAME_LENGTH)) {
+                etItemName.setError(getString(R.string.checklist_error_item_name_invalid));
+            } else if (selectedPosition < 0) {
+                Toast.makeText(requireContext(), R.string.checklist_toast_select_category, Toast.LENGTH_SHORT).show();
+                return;
+            } else if (ValidationUtils.isDuplicateName(itemName, getTaskNamesInCategory(currentCategories.get(selectedPosition).getId(), null))) {
+                etItemName.setError(getString(R.string.checklist_error_item_exists));
+            } else {
                 int categoryId = currentCategories.get(selectedPosition).getId();
                 executorService.execute(() -> {
-                    ChecklistTask newTask = new ChecklistTask(categoryId, currentTripId, itemName);
+                    ChecklistTask newTask = new ChecklistTask(categoryId, itemName);
                     checklistDao.insertTask(newTask);
                     loadChecklistData();
                 });
                 dialog.dismiss();
-            } else {
-                Toast.makeText(requireContext(), "Vui lòng nhập tên món đồ", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (etItemName.getError() != null) {
+                Toast.makeText(requireContext(), etItemName.getError(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -329,15 +370,15 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
     @Override
     public void onTaskDeleted(ChecklistTask task) {
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Xác nhận xóa")
-                .setMessage("Bạn có chắc muốn xóa món đồ này không?")
-                .setPositiveButton("Xóa", (dialog, which) -> {
+                .setTitle(R.string.checklist_dialog_delete_title)
+                .setMessage(R.string.checklist_dialog_delete_item_message)
+                .setPositiveButton(R.string.common_delete, (dialog, which) -> {
                     executorService.execute(() -> {
                         checklistDao.deleteTask(task);
                         loadChecklistData();
                     });
                 })
-                .setNegativeButton("Hủy", null)
+                .setNegativeButton(R.string.common_cancel, null)
                 .show();
     }
 
@@ -347,27 +388,60 @@ public class ChecklistFragment extends Fragment implements ChecklistTaskAdapter.
         input.setText(task.getName());
         input.setPadding(50, 50, 50, 50);
 
-        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                .setTitle("Sửa tên món đồ")
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.checklist_dialog_edit_item_title)
                 .setView(input)
-                .setPositiveButton("Cập nhật", (dialog, which) -> {
+                .setPositiveButton(R.string.common_update, null)
+                .setNegativeButton(R.string.common_cancel, null)
+                .create();
+
+        dialog.setOnShowListener(d -> dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
                     String newName = input.getText().toString().trim();
-                    if (!newName.isEmpty()) {
+                    input.setError(null);
+                    if (ValidationUtils.isNullOrEmpty(newName)) {
+                        input.setError(getString(R.string.checklist_error_name_empty));
+                    } else if (!ValidationUtils.isValidDisplayName(newName, MIN_ITEM_NAME_LENGTH, MAX_ITEM_NAME_LENGTH)) {
+                        input.setError(getString(R.string.checklist_error_item_name_invalid));
+                    } else if (ValidationUtils.isDuplicateName(newName, getTaskNamesInCategory(task.getCategoryId(), task))) {
+                        input.setError(getString(R.string.checklist_error_item_exists));
+                    } else {
                         task.setName(newName);
                         executorService.execute(() -> {
                             checklistDao.updateTask(task);
                             loadChecklistData();
                         });
-                    } else {
-                        Toast.makeText(requireContext(), "Tên không được để trống!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        return;
                     }
-                })
-                .setNegativeButton("Hủy", null)
-                .show();
+                    Toast.makeText(requireContext(), input.getError(), Toast.LENGTH_SHORT).show();
+                }));
+        dialog.show();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    private List<String> getCategoryNamesExcept(@Nullable ChecklistCategory excludedCategory) {
+        List<String> names = new ArrayList<>();
+        for (ChecklistCategory category : currentCategories) {
+            if (excludedCategory != null && category.getId() == excludedCategory.getId()) {
+                continue;
+            }
+            names.add(category.getName());
+        }
+        return names;
     }
+
+    private List<String> getTaskNamesInCategory(int categoryId, @Nullable ChecklistTask excludedTask) {
+        List<String> names = new ArrayList<>();
+        List<ChecklistTask> tasks = currentTaskMap.get(categoryId);
+        if (tasks == null) {
+            return names;
+        }
+        for (ChecklistTask existingTask : tasks) {
+            if (excludedTask != null && existingTask.getId() == excludedTask.getId()) {
+                continue;
+            }
+            names.add(existingTask.getName());
+        }
+        return names;
+    }
+
 }

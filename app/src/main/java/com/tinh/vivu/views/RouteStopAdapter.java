@@ -50,8 +50,9 @@ public class RouteStopAdapter extends RecyclerView.Adapter<RouteStopAdapter.Stop
         holder.tvExpArr.setText(stop.getExpectedArrival());
         holder.tvExpDep.setText(stop.getExpectedDeparture());
 
-        holder.tvActArr.setText(stop.getActualArrival().isEmpty() ? "--:-- --/--" : stop.getActualArrival());
-        holder.tvActDep.setText(stop.getActualDeparture().isEmpty() ? "--:-- --/--" : stop.getActualDeparture());
+        String emptyTimePlaceholder = holder.itemView.getContext().getString(R.string.route_stop_actual_time_placeholder);
+        holder.tvActArr.setText(stop.getActualArrival().isEmpty() ? emptyTimePlaceholder : stop.getActualArrival());
+        holder.tvActDep.setText(stop.getActualDeparture().isEmpty() ? emptyTimePlaceholder : stop.getActualDeparture());
 
         // Reset listener để tránh bị gọi đè khi scroll
         holder.cbArrived.setOnCheckedChangeListener(null);
@@ -82,7 +83,7 @@ public class RouteStopAdapter extends RecyclerView.Adapter<RouteStopAdapter.Stop
             if (isChecked) {
                 if (stop.getActualArrival().isEmpty()) {
                     // Nếu chưa check Đã đến mà đòi check Đã rời
-                    Toast.makeText(buttonView.getContext(), "Bạn phải Check-in 'Đã đến' trước!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(buttonView.getContext(), buttonView.getContext().getString(R.string.route_stop_toast_arrive_first), Toast.LENGTH_SHORT).show();
                     buttonView.setChecked(false);
                     return;
                 }

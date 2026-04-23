@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="1dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <FrameLayout
+            android:id="@+id/fl_history_icon_bg"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_circle_white"
+            android:backgroundTint="#FDECEC">
+
+            <ImageView
+                android:id="@+id/iv_history_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_wrench"
+                app:tint="#D32F2F" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="14dp"
+            android:layout_toEndOf="@id/fl_history_icon_bg"
+            android:layout_toStartOf="@id/tv_history_cost"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_history_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/item_maintenance_type_placeholder"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_history_meta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/item_maintenance_meta_placeholder"
+                android:textColor="#667085"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_history_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/item_maintenance_note_placeholder"
+                android:textColor="#475467"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_history_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="@string/item_maintenance_cost_placeholder"
+            android:textColor="#D32F2F"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

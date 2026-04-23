@@ -52,10 +52,10 @@ public class DiaryFragment extends Fragment {
             @Override
             public void onDeleteClick(JourneyLog log) {
                 new AlertDialog.Builder(getContext())
-                        .setMessage("Xác nhận xóa bài viết này?")
-                        .setPositiveButton("Xóa", (d, w) -> {
+                        .setMessage(R.string.diary_delete_confirm_message)
+                        .setPositiveButton(R.string.common_delete, (d, w) -> {
                             AppDatabase.databaseWriteExecutor.execute(() -> db.journeyLogDao().delete(log));
-                        }).setNegativeButton("Hủy", null).show();
+                        }).setNegativeButton(R.string.common_cancel, null).show();
             }
 
             @Override

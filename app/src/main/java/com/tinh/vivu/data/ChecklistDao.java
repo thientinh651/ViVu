@@ -37,15 +37,10 @@ public interface ChecklistDao {
     @Delete
     void deleteTask(ChecklistTask task);
 
-    @Query("SELECT * FROM checklist_tasks WHERE categoryId = :categoryId")
-    List<ChecklistTask> getTasksByCategoryId(int categoryId);
-
-    @Query("SELECT * FROM checklist_tasks WHERE tripId = :tripId")
+    @Query("SELECT t.* FROM checklist_tasks t " +
+            "INNER JOIN checklist_categories c ON t.categoryId = c.id " +
+            "WHERE c.tripId = :tripId")
     List<ChecklistTask> getAllTasksByTripId(int tripId);
-
-    // Đưa TẤT CẢ mục trong Trip về chưa hoàn thành
-    @Query("UPDATE checklist_tasks SET isCompleted = 0, completedAt = 0 WHERE tripId = :tripId")
-    void resetChecklist(int tripId);
 
     // Đưa các mục của RIÊNG 1 DANH MỤC về chưa hoàn thành
     @Query("UPDATE checklist_tasks SET isCompleted = 0, completedAt = 0 WHERE categoryId = :categoryId")
@@ -55,6 +50,7 @@ public interface ChecklistDao {
     @Query("DELETE FROM checklist_tasks WHERE categoryId = :categoryId")
     void deleteTasksByCategoryId(int categoryId);
     // Reset tất cả các Task trong Trip
-    @Query("UPDATE checklist_tasks SET isCompleted = 0, completedAt = 0 WHERE tripId = :tripId")
-    void resetAllTasksByTripId(int tripId);
+    @Query("UPDATE checklist_tasks SET isCompleted = 0, completedAt = 0 " +
+            "WHERE categoryId IN (SELECT id FROM checklist_categories WHERE tripId = :tripId)")
+    void resetTasksByTripId(int tripId);
 }

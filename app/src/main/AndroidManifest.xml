@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 
     <application
@@ -23,17 +24,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Vivu">
-        <activity
-            android:name=".Expense"
-            android:exported="false" />
         <!--        <activity-->
         <!--            android:name=".activity_check_list"-->
         <!--            android:exported="false" /> &lt;!&ndash; <activity &ndash;&gt;-->
         <!-- android:name=".CheckList" -->
         <!-- android:exported="false" /> -->
-        <activity
-            android:name=".TripDetailActivity"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -46,6 +41,11 @@
 
         <service
             android:name=".services.MusicService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <service
+            android:name=".services.AlarmPlaybackService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
 
@@ -67,6 +67,18 @@
         <receiver android:name=".services.AlarmReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <receiver
+            android:name=".services.AlarmRescheduleReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

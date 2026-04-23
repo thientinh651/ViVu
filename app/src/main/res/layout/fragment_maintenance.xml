@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#D32F2F"
+            android:elevation="4dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_wrench"
+                    app:tint="@android:color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/maintenance_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_trip_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/maintenance_trip_current"
+                android:textColor="#FFE5E5"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_vehicle_plate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/maintenance_vehicle_plate_placeholder"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_manage_vehicle"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/maintenance_manage_vehicle"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@android:color/white" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_manage_intervals"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/maintenance_intervals"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_vehicle_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:background="#FFF4E5"
+            android:padding="16dp"
+            android:text="@string/maintenance_vehicle_empty"
+            android:textColor="#B45309"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#D32F2F"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="18dp"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:src="@android:drawable/ic_menu_mylocation"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_total_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="0"
+                        android:textColor="@android:color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/maintenance_total_km"
+                        android:textColor="#FFE5E5"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:src="@drawable/ic_gas_pump"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_avg_consumption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="0.0"
+                        android:textColor="@android:color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/maintenance_l_per_100km"
+                        android:textColor="#FFE5E5"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:src="@drawable/ic_wrench"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_distance_since_oil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="0"
+                        android:textColor="@android:color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/maintenance_km_since_oil"
+                        android:textColor="#FFE5E5"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/maintenance_manual_odo_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="6dp"-->
+<!--                    android:text="@string/maintenance_manual_odo_desc"-->
+<!--                    android:textColor="#667085"-->
+<!--                    android:textSize="12sp" />-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_add_distance"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:background="#F1F5F9"
+                        android:hint="@string/maintenance_manual_odo_hint"
+                        android:inputType="number"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@android:color/black" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_add_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="@string/maintenance_update_action"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="#D32F2F"
+                        app:cornerRadius="10dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_log_fuel"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:text="@string/maintenance_log_fuel_action"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="#F97316"
+                        app:cornerRadius="10dp"
+                        app:icon="@drawable/ic_gas_pump"
+                        app:iconTint="@android:color/white" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_log_maintenance"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/maintenance_log_maintenance_action"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="#D32F2F"
+                        app:cornerRadius="10dp"
+                        app:icon="@drawable/ic_wrench"
+                        app:iconTint="@android:color/white" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_oil_status"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@android:drawable/checkbox_on_background"
+                        app:tint="#16A34A" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                    android:text="@string/maintenance_oil_reminder_title"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_oil_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/maintenance_oil_message_default"
+                    android:textColor="#475467"
+                    android:textSize="14sp" />
+
+                <ProgressBar
+                    android:id="@+id/progress_oil_change"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="14dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressTint="#D32F2F" />
+
+                <TextView
+                    android:id="@+id/tv_last_oil_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/maintenance_last_oil_default"
+                    android:textColor="#667085"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_mark_oil_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/maintenance_mark_oil_changed"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="#D32F2F"
+                    app:cornerRadius="10dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/maintenance_fuel_efficiency_title"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_reset_fuel_cycle"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="10dp"
+                        android:text="@string/maintenance_reset_fuel_cycle_action"
+                        android:textAllCaps="false"
+                        android:textColor="#D32F2F"
+                        android:textSize="12sp"
+                        app:cornerRadius="10dp"
+                        app:strokeColor="#FCA5A5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="#F8FAFC"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/maintenance_avg_consumption_label"
+                            android:textColor="#475467"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_fuel_consumption_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/maintenance_avg_consumption_default"
+                            android:textColor="#D32F2F"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/maintenance_km_per_liter_label"
+                            android:textColor="#475467"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_km_per_liter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/maintenance_km_per_liter_default"
+                            android:textColor="#2563EB"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_fuel_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/maintenance_fuel_summary"
+                        android:textColor="#667085"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_latest_fuel_segment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/maintenance_latest_segment_default"
+                        android:textColor="#2563EB"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/maintenance_checklist_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/ll_maintenance_checklist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/maintenance_history_title"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_history_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#FFFFFF"
+                android:padding="16dp"
+                android:text="@string/maintenance_history_empty"
+                android:textColor="#667085"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_maintenance_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

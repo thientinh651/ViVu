@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Travel Checklist"
+                android:text="@string/checklist_title"
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="bold" />
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Prepare for your trip"
+            android:text="@string/checklist_subtitle"
             android:textColor="#FFCCBC"
             android:textSize="16sp" />
 
@@ -83,7 +83,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Preparation Progress"
+                            android:text="@string/checklist_preparation_progress"
                             android:textColor="#212121"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -109,7 +109,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="0 of 0 items completed"
+                        android:text="@string/checklist_items_completed_default"
                         android:textColor="#78909C"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -127,7 +127,7 @@
                     android:layout_height="54dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
-                    android:text="+ Add Item"
+                    android:text="@string/checklist_add_item"
                     android:textAllCaps="false"
                     app:backgroundTint="#FF5722"
                     app:cornerRadius="8dp" />
@@ -138,7 +138,7 @@
                     android:layout_height="54dp"
                     android:layout_weight="1"
                     android:layout_marginStart="4dp"
-                    android:text="+ Add List"
+                    android:text="@string/checklist_add_list"
                     android:textAllCaps="false"
                     android:textColor="#FF5722"
                     app:cornerRadius="8dp"
@@ -158,7 +158,7 @@
                 android:layout_marginTop="24dp"
                 android:background="@drawable/bg_outline_gray"
                 android:gravity="center"
-                android:text="Reset Checklist"
+                android:text="@string/checklist_reset"
                 android:textColor="#FF5722"
                 android:textSize="16sp"
                 android:textStyle="bold" />

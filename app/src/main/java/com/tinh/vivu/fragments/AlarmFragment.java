@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tinh.vivu.R;
 import com.tinh.vivu.data.AppDatabase;
 import com.tinh.vivu.models.Alarm;
-import com.tinh.vivu.services.AlarmReceiver;
+import com.tinh.vivu.utils.AlarmScheduler;
 import com.tinh.vivu.views.AlarmAdapter;
 
 import java.util.Calendar;
@@ -38,6 +38,7 @@ public class AlarmFragment extends Fragment {
     private AlarmAdapter alarmAdapter;
     private ExecutorService executorService;
     private AppDatabase database;
+    private Context appContext;
 
     @Nullable
     @Override
@@ -47,6 +48,7 @@ public class AlarmFragment extends Fragment {
         rvAlarms = view.findViewById(R.id.rv_alarms);
         executorService = Executors.newSingleThreadExecutor();
         database = AppDatabase.getInstance(requireContext());
+        appContext = requireContext().getApplicationContext();
 
         // XIN QUYỀN THÔNG BÁO CHO ANDROID 13+ ĐỂ ĐẢM BẢO HIỆN POPUP
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -56,11 +58,11 @@ public class AlarmFragment extends Fragment {
         }
 
         setupRecyclerView();
-        loadAlarms();
+        loadAlarms(false);
 
         view.findViewById(R.id.btn_add_alarm).setOnClickListener(v -> {
             AddAlarmBottomSheet bottomSheet = AddAlarmBottomSheet.newInstance(null);
-            bottomSheet.setOnAlarmAddedListener(this::loadAlarms);
+            bottomSheet.setOnAlarmAddedListener(() -> loadAlarms(true));
             bottomSheet.show(getParentFragmentManager(), "AddAlarmBottomSheet");
         });
 
@@ -85,21 +87,32 @@ public class AlarmFragment extends Fragment {
 
                 executorService.execute(() -> {
                     database.alarmDao().delete(alarmToDelete);
-                    cancelAlarmInSystem(alarmToDelete);
-                    loadAlarms();
+                    AlarmScheduler.cancelAlarm(appContext, alarmToDelete);
+                    loadAlarms(false);
                 });
-                Toast.makeText(requireContext(), "Đã xóa báo thức", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.alarm_toast_deleted, Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(rvAlarms);
     }
 
-    private void loadAlarms() {
+    private void loadAlarms(boolean promptForExactPermission) {
         executorService.execute(() -> {
             List<Alarm> alarms = database.alarmDao().getAllAlarms();
+            boolean needsExactPermission = false;
 
             for (Alarm alarm : alarms) {
-                if (alarm.isActive()) scheduleAlarmInSystem(alarm);
-                else cancelAlarmInSystem(alarm);
+                if (alarm.isActive()) {
+                    boolean scheduled = AlarmScheduler.scheduleAlarm(appContext, alarm);
+                    if (!scheduled) {
+                        needsExactPermission = true;
+                    }
+                } else {
+                    AlarmScheduler.cancelAlarm(appContext, alarm);
+                }
+            }
+
+            if (promptForExactPermission && needsExactPermission && getActivity() != null) {
+                getActivity().runOnUiThread(this::showExactAlarmPermissionPrompt);
             }
 
             if (getActivity() != null) {
@@ -107,21 +120,33 @@ public class AlarmFragment extends Fragment {
                     alarmAdapter.setAlarms(alarms, new AlarmAdapter.OnAlarmToggleListener() {
                         @Override
                         public void onToggle(Alarm alarm, boolean isChecked) {
-                            alarm.setActive(isChecked);
-                            executorService.execute(() -> database.alarmDao().update(alarm));
-
                             if (isChecked) {
-                                scheduleAlarmInSystem(alarm);
-                                Toast.makeText(requireContext(), "Đã bật báo thức lúc " + alarm.getHour() + ":" + String.format("%02d", alarm.getMinute()), Toast.LENGTH_SHORT).show();
+                                if (!ensureExactAlarmPermissionForUserAction()) {
+                                    alarm.setActive(false);
+                                    executorService.execute(() -> database.alarmDao().update(alarm));
+                                    loadAlarms(false);
+                                    return;
+                                }
+
+                                alarm.setActive(true);
+                                executorService.execute(() -> database.alarmDao().update(alarm));
+                                AlarmScheduler.scheduleAlarm(appContext, alarm);
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.alarm_toast_enabled_at, alarm.getHour(), alarm.getMinute()),
+                                        Toast.LENGTH_SHORT
+                                ).show();
                             } else {
-                                cancelAlarmInSystem(alarm);
+                                alarm.setActive(false);
+                                executorService.execute(() -> database.alarmDao().update(alarm));
+                                AlarmScheduler.cancelAlarm(appContext, alarm);
                             }
                         }
 
                         @Override
                         public void onItemClick(Alarm alarm) {
                             AddAlarmBottomSheet bottomSheet = AddAlarmBottomSheet.newInstance(alarm);
-                            bottomSheet.setOnAlarmAddedListener(() -> loadAlarms());
+                            bottomSheet.setOnAlarmAddedListener(() -> loadAlarms(true));
                             bottomSheet.show(getParentFragmentManager(), "EditAlarmBottomSheet");
                         }
                     });
@@ -130,52 +155,21 @@ public class AlarmFragment extends Fragment {
         });
     }
 
-    private void scheduleAlarmInSystem(Alarm alarm) {
-        AlarmManager alarmManager = (AlarmManager) requireContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(requireContext(), AlarmReceiver.class);
-        intent.putExtra("ALARM_LABEL", alarm.getLabel());
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(requireContext(), alarm.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
-        calendar.set(Calendar.MINUTE, alarm.getMinute());
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        // Nếu giờ chọn đã qua (dù chỉ là vài giây), hẹn luôn qua ngày mai!
-        if (calendar.before(Calendar.getInstance())) {
-            calendar.add(Calendar.DATE, 1);
+    private boolean ensureExactAlarmPermissionForUserAction() {
+        if (AlarmScheduler.canScheduleExactAlarms(appContext)) {
+            return true;
         }
-
-        if (alarmManager != null) {
-            try {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                    if (alarmManager.canScheduleExactAlarms()) {
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                    } else {
-                        // CHỖ NÀY BẮT ÉP PHẢI XIN QUYỀN NẾU CHƯA CÓ
-                        if (getActivity() != null) {
-                            getActivity().runOnUiThread(() -> Toast.makeText(requireContext(), "Vui lòng cấp quyền Báo thức & Nhắc nhở để chuông kêu đúng giờ!", Toast.LENGTH_LONG).show());
-                        }
-                        Intent permissionIntent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-                        startActivity(permissionIntent);
-                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                    }
-                } else {
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                }
-            } catch (Exception e) {
-                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-            }
-        }
+        showExactAlarmPermissionPrompt();
+        return false;
     }
 
-    private void cancelAlarmInSystem(Alarm alarm) {
-        AlarmManager alarmManager = (AlarmManager) requireContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(requireContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(requireContext(), alarm.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        if (alarmManager != null) alarmManager.cancel(pendingIntent);
+    private void showExactAlarmPermissionPrompt() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || getActivity() == null) {
+            return;
+        }
+        Toast.makeText(requireContext(), R.string.alarm_exact_permission_message, Toast.LENGTH_LONG).show();
+        Intent permissionIntent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+        startActivity(permissionIntent);
     }
 
     @Override

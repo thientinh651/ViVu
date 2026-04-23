@@ -33,6 +33,7 @@ import com.tinh.vivu.data.AppDatabase;
 import com.tinh.vivu.models.JourneyLog;
 import com.tinh.vivu.models.RouteStop;
 import com.tinh.vivu.models.Trip;
+import com.tinh.vivu.utils.ValidationUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,6 +43,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class AddDiaryFragment extends Fragment {
+    private static final int MIN_TITLE_LENGTH = 3;
+    private static final int MAX_TITLE_LENGTH = 80;
+    private static final int MAX_CONTENT_LENGTH = 500;
 
     private EditText edtTitle, edtContent;
     private Spinner spinnerTrip, spinnerRouteStop;
@@ -98,7 +102,7 @@ public class AddDiaryFragment extends Fragment {
         if (btnAddPhotoOption != null) {
             btnAddPhotoOption.setOnClickListener(v -> {
                 if (selectedImagePaths.size() >= 5) {
-                    Toast.makeText(getContext(), "Tối đa 5 ảnh", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.diary_add_toast_max_images), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 showPhotoOptionsDialog();
@@ -177,7 +181,7 @@ public class AddDiaryFragment extends Fragment {
                 getActivity().runOnUiThread(() -> {
                     this.routeStopList = stops;
                     List<String> stopNames = new ArrayList<>();
-                    stopNames.add("Không gắn điểm dừng cụ thể");
+                    stopNames.add(getString(R.string.diary_add_stop_none));
                     for (RouteStop s : stops) stopNames.add(s.getLocationName());
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, stopNames);
@@ -197,7 +201,10 @@ public class AddDiaryFragment extends Fragment {
     }
 
     private void showPhotoOptionsDialog() {
-        String[] options = {"Chụp ảnh", "Thư viện"};
+        String[] options = {
+                getString(R.string.diary_add_photo_option_camera),
+                getString(R.string.diary_add_photo_option_gallery)
+        };
         new AlertDialog.Builder(getContext()).setItems(options, (dialog, which) -> {
             if (which == 0) openCamera();
             else openGallery();
@@ -213,7 +220,7 @@ public class AddDiaryFragment extends Fragment {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             cameraLauncher.launch(intent);
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.diary_add_camera_error_format, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -247,11 +254,11 @@ public class AddDiaryFragment extends Fragment {
         iv.setOnClickListener(v -> showFullImageDialog(path));
 
         btnRemove.setOnClickListener(v -> {
-            new AlertDialog.Builder(getContext()).setMessage("Bỏ hình ảnh này?")
-                    .setPositiveButton("Xóa", (d, w) -> {
+            new AlertDialog.Builder(getContext()).setMessage(R.string.diary_add_remove_image_confirm)
+                    .setPositiveButton(R.string.common_delete, (d, w) -> {
                         selectedImagePaths.remove(path);
                         photoContainer.removeView(item);
-                    }).setNegativeButton("Hủy", null)
+                    }).setNegativeButton(R.string.common_cancel, null)
                     .show();
         });
 
@@ -283,9 +290,33 @@ public class AddDiaryFragment extends Fragment {
 
     private void saveEntry() {
         String title = edtTitle.getText().toString().trim();
-        if (title.isEmpty()) { Toast.makeText(getContext(), "Vui lòng nhập tiêu đề", Toast.LENGTH_SHORT).show(); return; }
+        String content = edtContent.getText().toString().trim();
+        edtTitle.setError(null);
+        edtContent.setError(null);
 
-        if (spinnerTrip.getSelectedItemPosition() < 0) return;
+        if (title.isEmpty()) {
+            edtTitle.setError(getString(R.string.diary_add_error_title_required));
+            edtTitle.requestFocus();
+            Toast.makeText(getContext(), getString(R.string.diary_add_toast_title_required), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!ValidationUtils.isValidDisplayName(title, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH)) {
+            edtTitle.setError(getString(R.string.diary_add_error_title_invalid));
+            edtTitle.requestFocus();
+            Toast.makeText(getContext(), getString(R.string.diary_add_toast_title_invalid), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (content.length() > MAX_CONTENT_LENGTH) {
+            edtContent.setError(getString(R.string.diary_add_error_content_too_long));
+            edtContent.requestFocus();
+            Toast.makeText(getContext(), getString(R.string.diary_add_toast_content_too_long), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (spinnerTrip.getSelectedItemPosition() < 0 || tripList.isEmpty()) {
+            Toast.makeText(getContext(), getString(R.string.diary_add_toast_trip_invalid), Toast.LENGTH_SHORT).show();
+            return;
+        }
         Trip trip = tripList.get(spinnerTrip.getSelectedItemPosition());
         Integer pointId = null;
         String location = trip.getName();

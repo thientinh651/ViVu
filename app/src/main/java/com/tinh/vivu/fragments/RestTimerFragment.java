@@ -1,8 +1,6 @@
 package com.tinh.vivu.fragments;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +33,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.tinh.vivu.R;
-import com.tinh.vivu.services.TimerReceiver;
+import com.tinh.vivu.services.AlarmPlaybackService;
+import com.tinh.vivu.utils.AlarmScheduler;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -55,6 +54,7 @@ public class RestTimerFragment extends Fragment {
 
     private SharedPreferences prefs;
     private static final String PREFS_NAME = "timer_prefs";
+    private Context appContext;
 
     // Xử lý kết quả trả về khi người dùng chọn nhạc chuông
     private final ActivityResultLauncher<Intent> ringtonePickerLauncher = registerForActivityResult(
@@ -76,6 +76,7 @@ public class RestTimerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rest_timer, container, false);
 
         prefs = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        appContext = requireContext().getApplicationContext();
         initViews(view);
         setupSpinner();
 
@@ -128,7 +129,7 @@ public class RestTimerFragment extends Fragment {
     }
 
     private void setupSpinner() {
-        String[] durations = {"15 Minutes", "30 Minutes", "1 Hour", "2 Hours", "3 Hours"};
+        String[] durations = getResources().getStringArray(R.array.rest_timer_durations);
         long[] times = {900000, 1800000, 3600000, 7200000, 10800000};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.spinner_item_white, durations);
@@ -142,7 +143,7 @@ public class RestTimerFragment extends Fragment {
                 if (!isTimerRunning) {
                     selectedDurationInMillis = times[position];
                     timeLeftInMillis = selectedDurationInMillis;
-                    tvSelectedTime.setText("Or set target time (e.g. 11:25)");
+                    tvSelectedTime.setText(R.string.rest_timer_target_time_hint);
                     updateCountDownText();
                 }
             }
@@ -154,7 +155,7 @@ public class RestTimerFragment extends Fragment {
     // Hộp thoại chọn giờ
     private void showTimePicker() {
         if (isTimerRunning) {
-            Toast.makeText(requireContext(), "Please pause timer to set new time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.rest_timer_toast_pause_to_set_time), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -179,9 +180,11 @@ public class RestTimerFragment extends Fragment {
                     timeLeftInMillis = targetTime.getTimeInMillis() - System.currentTimeMillis();
                     selectedDurationInMillis = timeLeftInMillis;
 
-                    String amPm = hourOfDay >= 12 ? "PM" : "AM";
+                    String amPm = hourOfDay >= 12
+                            ? getString(R.string.common_pm)
+                            : getString(R.string.common_am);
                     int hr12 = hourOfDay > 12 ? hourOfDay - 12 : (hourOfDay == 0 ? 12 : hourOfDay);
-                    tvSelectedTime.setText(String.format(Locale.getDefault(), "Target Time: %02d:%02d %s", hr12, selectedMinute, amPm));
+                    tvSelectedTime.setText(getString(R.string.rest_timer_target_time_format, hr12, selectedMinute, amPm));
 
                     updateCountDownText();
                 }, hour, minute, true); // true = 24h format
@@ -192,7 +195,7 @@ public class RestTimerFragment extends Fragment {
     private void pickRingtone() {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Alarm Sound");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.rest_timer_ringtone_picker_title));
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
 
         String existingUri = prefs.getString("alarm_sound_uri", null);
@@ -206,12 +209,17 @@ public class RestTimerFragment extends Fragment {
     private void updateSoundText(Uri uri) {
         Ringtone ringtone = RingtoneManager.getRingtone(requireContext(), uri);
         if (ringtone != null) {
-            tvSelectedSound.setText("Sound: " + ringtone.getTitle(requireContext()));
+            tvSelectedSound.setText(getString(R.string.rest_timer_sound_format, ringtone.getTitle(requireContext())));
         }
     }
 
     private void startTimer() {
-        endTime = System.currentTimeMillis() + timeLeftInMillis;
+        long triggerAtMillis = System.currentTimeMillis() + timeLeftInMillis;
+        if (!AlarmScheduler.scheduleTimer(appContext, triggerAtMillis)) {
+            showExactAlarmPermissionPrompt();
+            return;
+        }
+        endTime = triggerAtMillis;
 
         countDownTimer = new CountDownTimer(timeLeftInMillis, 1000) {
             @Override
@@ -223,24 +231,28 @@ public class RestTimerFragment extends Fragment {
             @Override
             public void onFinish() {
                 isTimerRunning = false;
+                AlarmScheduler.cancelTimer(appContext);
+                clearStoredTimerState();
                 updateInterface();
-                tvStatus.setText("Time to Rest!");
-
-                // THÊM DÒNG NÀY: Chủ động gọi báo thức ngay lập tức nếu người dùng đang mở App
-                requireContext().sendBroadcast(new Intent(requireContext(), TimerReceiver.class));
+                tvStatus.setText(R.string.rest_timer_status_time_to_rest);
+                AlarmPlaybackService.startTimerAlert(appContext, prefs.getString("alarm_sound_uri", null));
             }
         }.start();
 
         isTimerRunning = true;
         updateInterface();
-        setAlarm(endTime);
     }
 
     private void pauseTimer() {
         if (countDownTimer != null) countDownTimer.cancel();
         isTimerRunning = false;
         updateInterface();
-        cancelAlarm();
+        AlarmScheduler.cancelTimer(appContext);
+        prefs.edit()
+                .putLong("millisLeft", timeLeftInMillis)
+                .putBoolean("timerRunning", false)
+                .putLong("endTime", 0)
+                .apply();
     }
 
     private void resetTimer() {
@@ -249,7 +261,12 @@ public class RestTimerFragment extends Fragment {
         isTimerRunning = false;
         updateCountDownText();
         updateInterface();
-        cancelAlarm();
+        AlarmScheduler.cancelTimer(appContext);
+        prefs.edit()
+                .putLong("millisLeft", timeLeftInMillis)
+                .putBoolean("timerRunning", false)
+                .putLong("endTime", 0)
+                .apply();
     }
 
     private void updateCountDownText() {
@@ -268,14 +285,14 @@ public class RestTimerFragment extends Fragment {
 
     private void updateInterface() {
         if (isTimerRunning) {
-            tvStatus.setText("Timer is running");
+            tvStatus.setText(R.string.rest_timer_status_running);
             spinnerDuration.setEnabled(false);
             btnSetTime.setEnabled(false);
 
             // Đổi icon Pause
             btnStartPauseIcon.setImageResource(R.drawable.ic_pause);
         } else {
-            tvStatus.setText("Ready to start");
+            tvStatus.setText(R.string.rest_timer_status_ready);
             spinnerDuration.setEnabled(true);
             btnSetTime.setEnabled(true);
 
@@ -284,44 +301,21 @@ public class RestTimerFragment extends Fragment {
         }
     }
 
-    private void setAlarm(long timeInMillis) {
-        AlarmManager alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(requireContext(), TimerReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        if (alarmManager != null) {
-            try {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                    if (alarmManager.canScheduleExactAlarms()) {
-                        // SỬA THÀNH setExactAndAllowWhileIdle
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
-                    } else {
-                        Toast.makeText(requireContext(), "Vui lòng cấp quyền Báo thức (Alarms & reminders) để Timer hoạt động!", Toast.LENGTH_LONG).show();
-                        Intent permissionIntent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-                        startActivity(permissionIntent);
-                        // SỬA THÀNH setAndAllowWhileIdle
-                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
-                    }
-                } else {
-                    // SỬA THÀNH setExactAndAllowWhileIdle
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
-                }
-            } catch (SecurityException e) {
-                e.printStackTrace();
-                // SỬA THÀNH setAndAllowWhileIdle
-                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent);
-            }
+    private void showExactAlarmPermissionPrompt() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            return;
         }
+        Toast.makeText(requireContext(), getString(R.string.rest_timer_exact_permission_message), Toast.LENGTH_LONG).show();
+        Intent permissionIntent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+        startActivity(permissionIntent);
     }
 
-    private void cancelAlarm() {
-        AlarmManager alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(requireContext(), TimerReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-        if (alarmManager != null) {
-            alarmManager.cancel(pendingIntent);
-        }
+    private void clearStoredTimerState() {
+        prefs.edit()
+                .putLong("millisLeft", selectedDurationInMillis)
+                .putBoolean("timerRunning", false)
+                .putLong("endTime", 0)
+                .apply();
     }
 
     @Override
@@ -350,8 +344,12 @@ public class RestTimerFragment extends Fragment {
             if (timeLeftInMillis < 0) {
                 timeLeftInMillis = 0;
                 isTimerRunning = false;
+                AlarmScheduler.cancelTimer(appContext);
+                clearStoredTimerState();
                 updateCountDownText();
                 updateInterface();
+                tvStatus.setText(R.string.rest_timer_status_time_to_rest);
+                AlarmPlaybackService.startTimerAlert(appContext, prefs.getString("alarm_sound_uri", null));
             } else {
                 startTimer();
             }

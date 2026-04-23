@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:text="Smart Alarm"
+            android:text="@string/clock_host_title"
             android:textColor="#333333"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -57,7 +57,7 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Alarm"
+            android:text="@string/clock_host_tab_alarm"
             android:textColor="#9D76F5"
             android:textStyle="bold" />
 
@@ -68,7 +68,7 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Timer"
+            android:text="@string/clock_host_tab_timer"
             android:textColor="#9E9E9E" />
     </LinearLayout>
 

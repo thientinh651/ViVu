@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_circle_white"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/vehicle_manage_dialog_title"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/vehicle_manage_existing_label"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/spinner_vehicle_existing"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="#F5F6F8"
+        android:padding="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_assign_vehicle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/vehicle_manage_assign_current_trip"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:backgroundTint="#D32F2F"
+        app:cornerRadius="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_edit_vehicle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@string/vehicle_manage_load_for_edit"
+            android:textAllCaps="false"
+            android:textColor="#2563EB"
+            app:cornerRadius="10dp"
+            app:strokeColor="#93C5FD" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_delete_vehicle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/vehicle_manage_delete_vehicle"
+            android:textAllCaps="false"
+            android:textColor="#D32F2F"
+            app:cornerRadius="10dp"
+            app:strokeColor="#F5B5B5" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/vehicle_manage_add_new_label"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_vehicle_form_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/vehicle_manage_form_add_mode"
+        android:textColor="#667085"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/et_vehicle_plate"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="#F5F6F8"
+        android:hint="@string/vehicle_manage_plate_hint"
+        android:inputType="textCapCharacters"
+        android:maxLength="15"
+        android:paddingHorizontal="16dp"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/et_vehicle_initial_odo"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="#F5F6F8"
+        android:hint="@string/vehicle_manage_initial_odo_hint"
+        android:inputType="number"
+        android:maxLength="7"
+        android:paddingHorizontal="16dp"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/et_vehicle_current_odo"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="#F5F6F8"
+        android:hint="@string/vehicle_manage_current_odo_hint"
+        android:inputType="number"
+        android:maxLength="7"
+        android:paddingHorizontal="16dp"
+        android:textColor="@android:color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save_vehicle"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@string/vehicle_manage_save_vehicle"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#2563EB"
+            app:cornerRadius="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_close_vehicle_dialog"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/common_close"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black"
+            app:cornerRadius="10dp"
+            app:strokeColor="#DDDDDD" />
+    </LinearLayout>
+</LinearLayout>

@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="More"
+                android:text="@string/more_title"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="All features &amp; settings"
+            android:text="@string/more_subtitle"
             android:textColor="#E0F2F1"
             android:textSize="14sp" />
     </LinearLayout>
@@ -64,7 +64,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quick Access"
+                android:text="@string/more_quick_access"
                 android:textColor="#333333"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -116,7 +116,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Travel Diary"
+                        android:text="@string/more_travel_diary"
                         android:textSize="12sp"
                         android:textColor="#444444"
                         android:textStyle="bold"/>
@@ -152,7 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Maintenance"
+                        android:text="@string/more_maintenance"
                         android:textSize="12sp"
                         android:textColor="#444444"
                         android:textStyle="bold"/>
@@ -187,7 +187,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Rest Timer"
+                        android:text="@string/more_rest_timer"
                         android:textSize="12sp"
                         android:textColor="#444444"
                         android:textStyle="bold"/>
@@ -222,7 +222,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Currency"
+                        android:text="@string/more_currency"
                         android:textSize="12sp"
                         android:textColor="#444444"
                         android:textStyle="bold"/>
@@ -257,7 +257,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Settings"
+                        android:text="@string/more_settings"
                         android:textSize="12sp"
                         android:textColor="#444444"
                         android:textStyle="bold"/>
@@ -296,7 +296,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:gravity="center"
-                        android:text="Your ultimate motorbike travel companion"
+                        android:text="@string/more_app_tagline"
                         android:textColor="#546E7A"
                         android:textSize="14sp" />
 
@@ -310,7 +310,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Version 1.0.0"
+                            android:text="@string/more_version"
                             android:textColor="#78909C"
                             android:textSize="12sp" />
 
@@ -324,7 +324,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Made with "
+                                android:text="@string/more_made_with"
                                 android:textColor="#78909C"
                                 android:textSize="12sp" />
                                 
@@ -337,7 +337,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text=" for backpackers &amp; road trippers"
+                                android:text="@string/more_for_travelers"
                                 android:textColor="#78909C"
                                 android:textSize="12sp" />
                         </LinearLayout>

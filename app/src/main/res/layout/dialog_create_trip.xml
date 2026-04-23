@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    app:cardCornerRadius="16dp">
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,39 +23,53 @@
 
             <TextView
                 android:id="@+id/tv_dialog_title"
+                style="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Tạo chuyến đi mới"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:text="@string/trip_create_dialog_title"
+                android:textColor="?attr/colorOnSurface" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/btn_close"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/common_close"
+                android:padding="8dp"
                 android:src="@drawable/ic_close"
-                app:tint="#757575" />
+                app:tint="?attr/colorOnSurfaceVariant" />
         </RelativeLayout>
 
         <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Tên chuyến đi *"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:text="@string/trip_create_name_label_required"
+            android:textColor="?attr/colorOnSurface" />
 
-        <EditText
-            android:id="@+id/et_trip_name"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_input_field"
-            android:hint="VD: Hà Nội - Đà Nẵng"
-            android:paddingHorizontal="12dp" />
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_trip_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/trip_create_name_hint"
+                android:inputType="textCapWords"
+                android:maxLength="60" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,22 +85,35 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/TextAppearance.Material3.LabelLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ngày bắt đầu *"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:text="@string/trip_create_start_date_label_required"
+                    android:textColor="?attr/colorOnSurface" />
 
-                <EditText
-                    android:id="@+id/et_start_date"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_input_field"
-                    android:drawableEnd="@drawable/ic_calendar"
-                    android:focusable="false"
-                    android:hint="dd/mm/yyyy"
-                    android:paddingHorizontal="12dp" />
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:endIconContentDescription="@string/trip_create_start_date_label_required"
+                    app:endIconDrawable="@drawable/ic_calendar"
+                    app:endIconMode="custom"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_start_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:hint="dd/mm/yyyy" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -92,42 +124,108 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/TextAppearance.Material3.LabelLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ngày kết thúc"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:text="@string/trip_create_end_date_label"
+                    android:textColor="?attr/colorOnSurface" />
 
-                <EditText
-                    android:id="@+id/et_end_date"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_input_field"
-                    android:drawableEnd="@drawable/ic_calendar"
-                    android:focusable="false"
-                    android:hint="dd/mm/yyyy"
-                    android:paddingHorizontal="12dp" />
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:endIconContentDescription="@string/trip_create_end_date_label"
+                    app:endIconDrawable="@drawable/ic_calendar"
+                    app:endIconMode="custom"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_end_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:hint="dd/mm/yyyy" />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
 
         <TextView
+            style="@style/TextAppearance.Material3.LabelLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Ngân sách dự kiến (VNĐ)"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:text="@string/trip_create_budget_label"
+            android:textColor="?attr/colorOnSurface" />
 
-        <EditText
-            android:id="@+id/et_budget"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_input_field"
-            android:hint="0"
-            android:inputType="number"
-            android:paddingHorizontal="12dp" />
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_budget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="0"
+                android:inputType="number"
+                android:maxLength="12" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                style="@style/TextAppearance.Material3.LabelLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/trip_create_vehicle_label"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/tv_manage_vehicle_trip"
+                style="@style/TextAppearance.Material3.LabelLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/trip_create_add_vehicle"
+                android:textColor="?attr/colorPrimary" />
+        </RelativeLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeColor="?attr/colorOutline"
+            app:strokeWidth="1dp">
+
+            <Spinner
+                android:id="@+id/spinner_trip_vehicle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:paddingHorizontal="12dp" />
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -137,27 +235,25 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_create_trip"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:text="Tạo mới"
+                android:text="@string/trip_create_action_create"
                 android:textAllCaps="false"
-                app:backgroundTint="@color/teal_primary"
-                app:cornerRadius="8dp" />
+                app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_cancel"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="Hủy"
+                android:text="@string/common_cancel"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
-                app:cornerRadius="8dp"
-                app:strokeColor="#E0E0E0" />
+                app:cornerRadius="12dp" />
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

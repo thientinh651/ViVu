@@ -9,7 +9,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your Alarm"
+        android:text="@string/alarm_title"
         android:textColor="#2D2A4A"
         android:textSize="16sp"
         android:textStyle="bold"

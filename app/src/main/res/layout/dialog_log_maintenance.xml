@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_circle_white"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/maintenance_log_dialog_title"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/maintenance_log_type_label"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/spinner_maintenance_type"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="#F5F6F8"
+        android:padding="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/maintenance_log_odo_label"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/et_maintenance_odo"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="#F5F6F8"
+        android:hint="2450"
+        android:inputType="number"
+        android:maxLength="7"
+        android:paddingHorizontal="16dp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/maintenance_log_cost_label"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/et_maintenance_cost"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="#F5F6F8"
+        android:hint="@string/maintenance_log_cost_hint"
+        android:inputType="numberDecimal"
+        android:maxLength="15"
+        android:paddingHorizontal="16dp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/maintenance_log_note_label"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/et_maintenance_note"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="#F5F6F8"
+        android:hint="@string/maintenance_log_note_hint"
+        android:inputType="textCapSentences"
+        android:maxLength="120"
+        android:paddingHorizontal="16dp"
+        android:textColor="@android:color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save_maintenance"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@string/common_save"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#D32F2F"
+            app:cornerRadius="10dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cancel_maintenance"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/common_cancel"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black"
+            app:cornerRadius="10dp"
+            app:strokeColor="#DDDDDD" />
+    </LinearLayout>
+</LinearLayout>

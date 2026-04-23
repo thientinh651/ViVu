@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Thêm điểm dừng"
+            android:text="@string/route_stop_dialog_title"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Tên địa điểm *"
+            android:text="@string/route_stop_dialog_name_label_required"
             android:textStyle="bold" />
 
         <EditText
@@ -34,7 +34,9 @@
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input_field"
-            android:hint="VD: Nghệ An"
+            android:hint="@string/route_stop_dialog_name_hint"
+            android:inputType="textCapWords"
+            android:maxLength="80"
             android:paddingHorizontal="12dp" />
 
         <!-- Dự kiến đến -->
@@ -42,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Dự kiến đến *"
+            android:text="@string/route_stop_dialog_expected_arrival_label_required"
             android:textStyle="bold" />
 
         <EditText
@@ -52,7 +54,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input_field"
             android:focusable="false"
-            android:hint="Chọn ngày giờ"
+            android:hint="@string/route_stop_dialog_select_datetime_hint"
             android:paddingHorizontal="12dp" />
 
         <!-- Dự kiến rời -->
@@ -60,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Dự kiến rời đi"
+            android:text="@string/route_stop_dialog_expected_departure_label"
             android:textStyle="bold" />
 
         <EditText
@@ -70,7 +72,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input_field"
             android:focusable="false"
-            android:hint="Chọn ngày giờ"
+            android:hint="@string/route_stop_dialog_select_datetime_hint"
             android:paddingHorizontal="12dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -78,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
-            android:text="Thêm vào lộ trình"
+            android:text="@string/route_stop_dialog_add_to_itinerary"
             app:backgroundTint="@color/teal_primary"
             app:cornerRadius="8dp" />
 

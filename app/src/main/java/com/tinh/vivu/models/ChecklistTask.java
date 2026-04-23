@@ -8,15 +8,13 @@ public class ChecklistTask {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int categoryId;
-    private int tripId;
     private String name;
     private boolean isCompleted;
     private long completedAt;
     private long createdAt;
 
-    public ChecklistTask(int categoryId, int tripId, String name) {
+    public ChecklistTask(int categoryId, String name) {
         this.categoryId = categoryId;
-        this.tripId = tripId;
         this.name = name;
         this.isCompleted = false;
         this.createdAt = System.currentTimeMillis();
@@ -27,8 +25,6 @@ public class ChecklistTask {
     public void setId(int id) { this.id = id; }
     public int getCategoryId() { return categoryId; }
     public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
-    public int getTripId() { return tripId; }
-    public void setTripId(int tripId) { this.tripId = tripId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public boolean isCompleted() { return isCompleted; }

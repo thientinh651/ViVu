@@ -13,7 +13,7 @@ import java.util.List;
 public interface TripDao {
 
     @Insert
-    void insert(Trip trip);
+    long insert(Trip trip);
 
     // ĐOẠN NÀY ĐỂ APP BIẾT CÁCH CẬP NHẬT TRẠNG THÁI
     @androidx.room.Update
@@ -27,4 +27,7 @@ public interface TripDao {
 
     @Query("SELECT * FROM trips WHERE id = :tripId LIMIT 1")
     Trip getTripById(int tripId);
+
+    @Query("SELECT * FROM trips ORDER BY createdAt DESC, id DESC LIMIT 1")
+    Trip getLatestTrip();
 }

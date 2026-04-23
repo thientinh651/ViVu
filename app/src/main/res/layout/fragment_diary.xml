@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Travel Diary"
+            android:text="@string/diary_title"
             android:textColor="@color/white"
             android:textSize="26sp"
             android:textStyle="bold" />
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Capture your memories"
+            android:text="@string/diary_subtitle"
             android:textColor="#FCE4EC"
             android:textSize="14sp" />
     </LinearLayout>
@@ -57,7 +57,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <TextView android:id="@+id/tv_total_entries" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#E91E63"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Entries" android:textSize="12sp" android:textColor="#757575"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/diary_entries" android:textSize="12sp" android:textColor="#757575"/>
             </LinearLayout>
 
             <View android:layout_width="1dp" android:layout_height="30dp" android:layout_gravity="center_vertical" android:background="#EEEEEE"/>
@@ -69,7 +69,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
                 <TextView android:id="@+id/tv_total_photos" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#2196F3"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Photos" android:textSize="12sp" android:textColor="#757575"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/diary_photos" android:textSize="12sp" android:textColor="#757575"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -82,7 +82,7 @@
         android:layout_below="@id/stats_card"
         android:layout_margin="16dp"
         android:background="#F0F0F0"
-        android:hint="Tìm kiếm nhật ký..."
+        android:hint="@string/diary_search_hint"
         android:paddingHorizontal="16dp"
         android:textSize="14sp" />
 

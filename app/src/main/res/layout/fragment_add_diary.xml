@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chọn chuyến đi"
+            android:text="@string/diary_add_select_trip"
             android:textColor="#212121"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Gắn với điểm dừng (Tùy chọn)"
+            android:text="@string/diary_add_route_stop_optional"
             android:textColor="#212121"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Tiêu đề kỷ niệm"
+            android:text="@string/diary_add_title_label"
             android:textColor="#212121"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -62,7 +62,9 @@
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input_field"
-            android:hint="Đặt tên cho khoảnh khắc này..."
+            android:hint="@string/diary_add_title_hint"
+            android:inputType="textCapSentences"
+            android:maxLength="80"
             android:paddingHorizontal="16dp"
             android:textSize="15sp" />
 
@@ -71,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Nội dung nhật ký"
+            android:text="@string/diary_add_content_label"
             android:textColor="#212121"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -83,7 +85,9 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_input_field"
             android:gravity="top"
-            android:hint="Hôm nay bạn thấy thế nào?..."
+            android:hint="@string/diary_add_content_hint"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="500"
             android:padding="16dp"
             android:textSize="15sp" />
 
@@ -92,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Hình ảnh (Tối đa 5)"
+            android:text="@string/diary_add_images_label"
             android:textColor="#212121"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -140,7 +144,7 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
-                android:text="Lưu nhật ký"
+                android:text="@string/diary_add_save"
                 android:textAllCaps="false"
                 app:backgroundTint="#E91E63"
                 app:cornerRadius="12dp" />
@@ -153,7 +157,7 @@
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
-                android:text="Hủy bỏ"
+                android:text="@string/common_cancel"
                 android:textAllCaps="false"
                 android:textColor="#212121"
                 app:cornerRadius="12dp"

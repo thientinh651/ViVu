@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -50,14 +52,16 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
         Alarm alarm = alarmList.get(position);
 
-        String amPm = alarm.getHour() >= 12 ? "PM" : "AM";
+        String amPm = alarm.getHour() >= 12
+                ? holder.itemView.getContext().getString(R.string.common_pm)
+                : holder.itemView.getContext().getString(R.string.common_am);
         int hr12 = alarm.getHour() > 12 ? alarm.getHour() - 12 : (alarm.getHour() == 0 ? 12 : alarm.getHour());
         String timeStr = String.format(Locale.getDefault(), "%02d:%02d", hr12, alarm.getMinute());
 
         holder.tvTime.setText(timeStr);
         holder.tvAmPm.setText(amPm);
         holder.tvLabel.setText(alarm.getLabel());
-        holder.tvDays.setText(alarm.getDaysOfWeek());
+        holder.tvDays.setText(formatDaysForDisplay(holder.itemView.getContext(), alarm.getDaysOfWeek()));
 
         holder.switchAlarm.setOnCheckedChangeListener(null);
         holder.switchAlarm.setChecked(alarm.isActive());
@@ -91,6 +95,60 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     @Override
     public int getItemCount() {
         return alarmList.size();
+    }
+
+    private String formatDaysForDisplay(Context context, String rawDays) {
+        if (rawDays == null || rawDays.trim().isEmpty()) {
+            return context.getString(R.string.alarm_repeat_once);
+        }
+        if ("Everyday".equalsIgnoreCase(rawDays)) {
+            return context.getString(R.string.alarm_repeat_everyday);
+        }
+        if ("Weekdays".equalsIgnoreCase(rawDays)) {
+            return context.getString(R.string.alarm_repeat_weekdays);
+        }
+        if ("Once".equalsIgnoreCase(rawDays)) {
+            return context.getString(R.string.alarm_repeat_once);
+        }
+
+        List<String> localizedTokens = new ArrayList<>();
+        String[] tokens = rawDays.split(",");
+        for (String token : tokens) {
+            String mappedToken = mapDayToken(context, token.trim());
+            if (!mappedToken.isEmpty()) {
+                localizedTokens.add(mappedToken);
+            }
+        }
+        return localizedTokens.isEmpty() ? rawDays : TextUtils.join(", ", localizedTokens);
+    }
+
+    private String mapDayToken(Context context, String token) {
+        String normalized = token.toLowerCase(Locale.US);
+        switch (normalized) {
+            case "mon":
+            case "t2":
+                return context.getString(R.string.alarm_day_mon);
+            case "tue":
+            case "t3":
+                return context.getString(R.string.alarm_day_tue);
+            case "wed":
+            case "t4":
+                return context.getString(R.string.alarm_day_wed);
+            case "thu":
+            case "t5":
+                return context.getString(R.string.alarm_day_thu);
+            case "fri":
+            case "t6":
+                return context.getString(R.string.alarm_day_fri);
+            case "sat":
+            case "t7":
+                return context.getString(R.string.alarm_day_sat);
+            case "sun":
+            case "cn":
+                return context.getString(R.string.alarm_day_sun);
+            default:
+                return token;
+        }
     }
 
     static class AlarmViewHolder extends RecyclerView.ViewHolder {

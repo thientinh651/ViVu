@@ -1,9 +1,20 @@
 package com.tinh.vivu.models;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "trips")
+@Entity(
+        tableName = "trips",
+        foreignKeys = @ForeignKey(
+                entity = Vehicle.class,
+                parentColumns = "vehicleId",
+                childColumns = "vehicleId",
+                onDelete = ForeignKey.SET_NULL
+        ),
+        indices = @Index("vehicleId")
+)
 public class Trip {
 
     @PrimaryKey(autoGenerate = true)
@@ -15,6 +26,7 @@ public class Trip {
     private double totalBudget;
     private String status; // Upcoming, Planning, Completed...
     private long createdAt;
+    private Integer vehicleId;
 
 
     public Trip(String name, String startDate, String endDate, double totalBudget, String status) {
@@ -47,4 +59,7 @@ public class Trip {
 
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+
+    public Integer getVehicleId() { return vehicleId; }
+    public void setVehicleId(Integer vehicleId) { this.vehicleId = vehicleId; }
 }

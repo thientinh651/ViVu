@@ -44,7 +44,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
         Trip currentTrip = trips.get(position);
 
         holder.tvTripName.setText(currentTrip.getName());
-        holder.tvTripStatus.setText(currentTrip.getStatus());
+        holder.tvTripStatus.setText(getLocalizedStatus(holder.itemView, currentTrip.getStatus()));
 
         String dateString = currentTrip.getStartDate();
         if (currentTrip.getEndDate() != null && !currentTrip.getEndDate().isEmpty()) {
@@ -54,7 +54,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
 
         DecimalFormat formatter = new DecimalFormat("#,###");
         String formattedBudget = formatter.format(currentTrip.getTotalBudget());
-        holder.tvTripBudget.setText(formattedBudget + " VNĐ");
+        holder.tvTripBudget.setText(holder.itemView.getContext().getString(R.string.trip_budget_format, formattedBudget));
 
 
         holder.btnDeleteTrip.setOnClickListener(v -> {
@@ -80,6 +80,16 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripHolder> {
     public void setTrips(List<Trip> trips) {
         this.trips = trips;
         notifyDataSetChanged();
+    }
+
+    private String getLocalizedStatus(View view, String status) {
+        if ("Ongoing".equalsIgnoreCase(status)) {
+            return view.getContext().getString(R.string.trip_status_ongoing);
+        }
+        if ("Completed".equalsIgnoreCase(status)) {
+            return view.getContext().getString(R.string.trip_status_completed);
+        }
+        return view.getContext().getString(R.string.trip_status_planning);
     }
 
     static class TripHolder extends RecyclerView.ViewHolder {

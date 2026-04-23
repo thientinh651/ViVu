@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import com.tinh.vivu.R;
@@ -29,7 +30,12 @@ public class MoreFragment extends Fragment {
                     .commit();
         });
 
-        view.findViewById(R.id.btn_menu_maintenance).setOnClickListener(v -> showToast("Maintenance"));
+        view.findViewById(R.id.btn_menu_maintenance).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new MaintenanceFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
 //        view.findViewById(R.id.btn_menu_rest).setOnClickListener(v -> showToast("Rest Timer"));
 //        view.findViewById(R.id.btn_menu_rest).setOnClickListener(v -> {
 //            getParentFragmentManager().beginTransaction()
@@ -43,13 +49,19 @@ public class MoreFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-        view.findViewById(R.id.btn_menu_currency).setOnClickListener(v -> showToast("Currency"));
-        view.findViewById(R.id.btn_menu_settings).setOnClickListener(v -> showToast("Settings"));
+        view.findViewById(R.id.btn_menu_currency).setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new CurrencyToolsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+        view.findViewById(R.id.btn_menu_settings).setOnClickListener(v -> showToast(R.string.more_settings));
 
         return view;
     }
 
-    private void showToast(String module) {
-        Toast.makeText(requireContext(), "Opening " + module + "...", Toast.LENGTH_SHORT).show();
+    private void showToast(@StringRes int moduleStringId) {
+        String module = getString(moduleStringId);
+        Toast.makeText(requireContext(), getString(R.string.common_opening_module, module), Toast.LENGTH_SHORT).show();
     }
 }

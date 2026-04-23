@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Quản Lý Chuyến Đi"
+                    android:text="@string/home_trip_title"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Lập kế hoạch chi tiết"
+                android:text="@string/home_trip_subtitle"
                 android:textColor="#E0F2F1"
                 android:textSize="14sp" />
         </LinearLayout>

@@ -44,7 +44,7 @@
                 android:id="@+id/tv_expense_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Đổ xăng"
+                android:text="@string/item_expense_note_placeholder"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -83,7 +83,7 @@
                     android:id="@+id/tv_expense_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Xăng"
+                    android:text="@string/item_expense_category_placeholder"
                     android:textColor="#888888"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="250,000 đ"
+            android:text="@string/item_expense_amount_placeholder"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
